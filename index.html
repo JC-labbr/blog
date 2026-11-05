@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entre Páginas — Livros que nos transformam. Histórias que permanecem.</title>
+    <meta name="description" content="Resenhas honestas, críticas literárias, guias de leitura e recomendações selecionadas com rigor editorial.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: 'rgba(10, 6, 12, 0.60)',
+                            bgSec: 'rgba(22, 14, 28, 0.40)',
+                            text: '#f2ebf5',
+                            muted: '#c0b2ca',
+                            accent: '#d16d82',
+                            accentHover: '#b85469',
+                            lilac: '#bda6d6',
+                            border: 'rgba(180, 145, 205, 0.20)',
+                            white: 'rgba(18, 10, 22, 0.40)'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.383.0/umd/lucide.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.3/umd/supabase.min.js"></script>
+
+    <style>
+        body {
+            background-image:
+                linear-gradient(rgba(10, 6, 12, 0.62), rgba(10, 6, 12, 0.70)),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23100b14'/%3E%3Cstop offset='50%25' stop-color='%2318101e'/%3E%3Cstop offset='100%25' stop-color='%230b070d'/%3E%3C/linearGradient%3E%3Cpattern id='shelf' width='240' height='160' patternUnits='userSpaceOnUse'%3E%3Crect width='240' height='160' fill='%23160e1b'/%3E%3Crect y='148' width='240' height='12' fill='%232a182b'/%3E%3Crect x='10' y='20' width='18' height='128' fill='%238b263e' rx='2'/%3E%3Crect x='30' y='35' width='16' height='113' fill='%233f2a52' rx='2'/%3E%3Crect x='48' y='15' width='22' height='133' fill='%23a26a9c' rx='2'/%3E%3Crect x='72' y='40' width='14' height='108' fill='%23233857' rx='2'/%3E%3Crect x='88' y='25' width='20' height='123' fill='%2348284c' rx='2'/%3E%3Crect x='110' y='10' width='25' height='138' fill='%237a1c32' rx='2'/%3E%3Crect x='137' y='30' width='15' height='118' fill='%23412a4c' rx='2'/%3E%3Crect x='154' y='20' width='18' height='128' fill='%23925785' rx='2'/%3E%3Crect x='174' y='45' width='22' height='103' fill='%23221926' rx='2'/%3E%3Crect x='198' y='15' width='16' height='133' fill='%236e2536' rx='2'/%3E%3Crect x='216' y='28' width='18' height='120' fill='%23332040' rx='2'/%3E%3C/pattern%3E%3CradialGradient id='candle' cx='20%25' cy='25%25' r='35%25'%3E%3Cstop offset='0%25' stop-color='%23d18ba2' stop-opacity='0.35'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='candle2' cx='75%25' cy='30%25' r='40%25'%3E%3Cstop offset='0%25' stop-color='%23b88bc0' stop-opacity='0.3'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23bg)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23shelf)' opacity='0.85'/%3E%3Crect width='100%25' height='100%25' fill='url(%23candle)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23candle2)'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #f2ebf5;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .font-serif { font-family: 'Lora', Georgia, serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #110c14; }
+        ::-webkit-scrollbar-thumb { background: #34223d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d16d82; }
+        .aspect-book { aspect-ratio: 2 / 3; }
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid #d16d82; outline-offset: 2px; }
+        .tab-page { display: none; }
+        .tab-page.active { display: block; }
+        #tab-inicio.active { display: block; }
+        .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #f2ebf5; background: rgba(22,14,28,0.97); border: 1px solid rgba(180,145,205,0.3); backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; pointer-events: none; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { border-color: rgba(52,211,153,0.4); }
+        .toast.error { border-color: rgba(209,109,130,0.5); }
+        .spinner { width: 20px; height: 20px; border: 2px solid rgba(180,145,205,0.3); border-top-color: #d16d82; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .cms-input { width: 100%; padding: 8px 12px; background: rgba(10,6,12,0.8); border: 1px solid rgba(180,145,205,0.2); border-radius: 8px; color: #f2ebf5; font-size: 13px; transition: border-color 0.2s; }
+        .cms-input:focus { outline: none; border-color: #d16d82; }
+        .cms-input::placeholder { color: #c0b2ca; opacity: 0.6; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-brand-accent selection:text-white">
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- TOP ANNOUNCEMENT BAR -->
+<div class="bg-brand-bgSec/70 backdrop-blur-md border-b border-brand-border text-xs text-brand-muted py-2 px-4 text-center flex items-center justify-center gap-2">
+    <i data-lucide="info" class="w-3.5 h-3.5 shrink-0 text-brand-lilac"></i>
+    <span>O <strong>Entre Páginas</strong> é mantido por leitores. Ao comprar por nossos links, podemos receber comissão sem custo adicional para você.</span>
+    <button onclick="switchTab('politica-afiliados')" class="underline hover:text-brand-text transition-colors">Saiba mais</button>
+</div>
+
+<!-- MAIN HEADER -->
+<header class="sticky top-0 z-40 bg-brand-bg/75 backdrop-blur-md border-b border-brand-border transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        <a href="#" onclick="switchTab('inicio')" class="group flex flex-col">
+            <span class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-brand-text group-hover:text-brand-accent transition-colors">Entre Páginas</span>
+            <span class="text-[10px] tracking-widest uppercase text-brand-muted font-medium">Revista & CRÍTICA LITERÁRIA</span>
+        </a>
+        <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-brand-muted">
+            <button onclick="switchTab('inicio')" class="hover:text-brand-accent transition-colors py-1">Início</button>
+            <button onclick="switchTab('resenhas')" class="hover:text-brand-accent transition-colors py-1">Resenhas</button>
+            <button onclick="switchTab('livros')" class="hover:text-brand-accent transition-colors py-1">Livros</button>
+            <button onclick="switchTab('autores')" class="hover:text-brand-accent transition-colors py-1">Autores</button>
+            <button onclick="switchTab('listas')" class="hover:text-brand-accent transition-colors py-1">Listas de Leitura</button>
+            <button onclick="switchTab('favoritos')" class="hover:text-brand-accent transition-colors py-1 flex items-center gap-1.5">
+                <i data-lucide="bookmark" class="w-4 h-4 text-brand-accent"></i>
+                <span>Minha Lista (<span id="nav-bookmarks-count">0</span>)</span>
+            </button>
+            <button onclick="switchTab('sobre')" class="hover:text-brand-accent transition-colors py-1">Sobre</button>
+        </nav>
+        <div class="flex items-center gap-3">
+            <button onclick="openSearchModal()" class="p-2.5 rounded-full hover:bg-brand-bgSec text-brand-text transition-colors" aria-label="Abrir busca">
+                <i data-lucide="search" class="w-5 h-5"></i>
+            </button>
+            <button onclick="switchTab('admin')" id="admin-nav-btn" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border border-brand-border hover:bg-brand-bgSec text-brand-muted hover:text-brand-text transition-colors">
+                <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                <span id="admin-nav-label">Admin</span>
+            </button>
+            <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-brand-text hover:bg-brand-bgSec transition-colors">
+                <i data-lucide="menu" id="menu-icon-open" class="w-6 h-6"></i>
+                <i data-lucide="x" id="menu-icon-close" class="w-6 h-6 hidden"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden border-b border-brand-border bg-brand-bg/95 backdrop-blur-lg px-4 pt-2 pb-6 space-y-3">
+        <button onclick="switchTab('inicio')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Início</button>
+        <button onclick="switchTab('resenhas')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Resenhas</button>
+        <button onclick="switchTab('livros')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Catálogo de Livros</button>
+        <button onclick="switchTab('autores')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Autores</button>
+        <button onclick="switchTab('listas')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Listas de Leitura</button>
+        <button onclick="switchTab('favoritos')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Minha Lista Salva</button>
+        <button onclick="switchTab('sobre')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Sobre Nós</button>
+        <button onclick="switchTab('admin')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md bg-brand-bgSec text-brand-accent">
+            <i data-lucide="lock" class="w-4 h-4 inline mr-1"></i> Painel Admin
+        </button>
+    </div>
+</header>
+
+<!-- SEARCH MODAL -->
+<div id="search-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-start justify-center pt-16 px-4">
+    <div class="bg-brand-bg/95 backdrop-blur-xl rounded-xl border border-brand-border shadow-2xl max-w-2xl w-full p-6 relative flex flex-col gap-4">
+        <button onclick="closeSearchModal()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-text p-1">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <h3 class="font-serif text-xl font-semibold text-brand-text">Buscar no Entre Páginas</h3>
+        <div class="relative">
+            <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-3.5 text-brand-muted"></i>
+            <input type="text" id="global-search-input" oninput="handleGlobalSearch(this.value)" placeholder="Digite por título, autor, gênero..." class="w-full pl-11 pr-4 py-3 bg-brand-bgSec border border-brand-border rounded-lg text-sm text-brand-text placeholder-brand-muted focus:ring-1 focus:ring-brand-accent">
+        </div>
+        <div class="flex flex-wrap gap-2 text-xs">
+            <span class="text-brand-muted py-1">Categorias populares:</span>
+            <button onclick="filterSearchCategory('Clássicos')" class="px-2.5 py-1 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Clássicos</button>
+            <button onclick="filterSearchCategory('Romance')" class="px-2.5 py-1 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Romance</button>
+            <button onclick="filterSearchCategory('Ficção Científica')" class="px-2.5 py-1 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Ficção Científica</button>
+        </div>
+        <div id="search-results-container" class="max-h-80 overflow-y-auto space-y-3 pt-2 divide-y divide-brand-border">
+            <p class="text-sm text-brand-muted text-center py-6">Digite ao menos 2 caracteres para pesquisar.</p>
+        </div>
+    </div>
+</div>
+
+<main id="app-content" class="flex-grow">
+
+<!-- ===================== INÍCIO ===================== -->
+<section id="tab-inicio" class="tab-page active space-y-16 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl space-y-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-bgSec/80 backdrop-blur-md border border-brand-border text-xs font-medium text-brand-accent">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>Crítica Literária Independente</span>
+        </div>
+        <h1 class="font-serif text-3xl sm:text-5xl font-bold tracking-tight text-brand-text leading-tight sm:leading-tight">
+            Seu próximo livro favorito começa aqui.
+        </h1>
+        <p class="text-base sm:text-lg text-brand-muted font-normal leading-relaxed">
+            Resenhas honestas, descobertas literárias e histórias que continuam com você depois da última página.
+        </p>
+        <div class="pt-2 flex flex-col sm:flex-row justify-center gap-3">
+            <button onclick="switchTab('resenhas')" class="px-6 py-3 bg-brand-accent hover:bg-brand-accentHover text-white rounded-lg font-medium text-sm transition-all shadow-sm flex items-center justify-center gap-2">
+                <span>Explorar Resenhas Críticas</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+            <button onclick="switchTab('listas')" class="px-6 py-3 bg-brand-bgSec/90 backdrop-blur-md hover:bg-brand-border text-brand-text rounded-lg font-medium text-sm transition-all flex items-center justify-center">
+                Ver Guias de Leitura
+            </button>
+        </div>
+    </div>
+
+    <!-- DESTAQUE PRINCIPAL -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div id="featured-book-section">
+            <div class="flex justify-center py-10"><div class="spinner"></div></div>
+        </div>
+    </div>
+
+    <!-- ÚLTIMAS RESENHAS -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-brand-border pb-4">
+            <div>
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold text-brand-text">Últimas Resenhas</h2>
+                <p class="text-xs sm:text-sm text-brand-muted">Análises detalhadas com foco em estrutura narrativa, estilo e profundidade temática.</p>
+            </div>
+            <button onclick="switchTab('resenhas')" class="text-xs font-semibold text-brand-accent hover:underline flex items-center gap-1 self-start sm:self-auto">
+                Ver todas <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+        <div id="home-reviews-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div class="col-span-full flex justify-center py-10"><div class="spinner"></div></div>
+        </div>
+    </div>
+
+    <!-- EXPLORE POR GÊNERO -->
+    <div class="bg-brand-bgSec/30 backdrop-blur-lg border-y border-brand-border py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <h2 class="font-serif text-2xl font-bold text-center text-brand-text">Explore por Gênero Literário</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                <button onclick="filterByGenre('Romance')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
+                    <i data-lucide="heart" class="w-5 h-5 mx-auto mb-2 text-brand-accent group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-semibold text-brand-text block">Romance</span>
+                </button>
+                <button onclick="filterByGenre('Clássicos')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
+                    <i data-lucide="landmark" class="w-5 h-5 mx-auto mb-2 text-brand-lilac group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-semibold text-brand-text block">Clássicos</span>
+                </button>
+                <button onclick="filterByGenre('Ficção Científica')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
+                    <i data-lucide="rocket" class="w-5 h-5 mx-auto mb-2 text-brand-accent group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-semibold text-brand-text block">Ficção Científica</span>
+                </button>
+                <button onclick="filterByGenre('Suspense')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
+                    <i data-lucide="eye" class="w-5 h-5 mx-auto mb-2 text-brand-lilac group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-semibold text-brand-text block">Suspense</span>
+                </button>
+                <button onclick="filterByGenre('Filosofia')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
+                    <i data-lucide="brain" class="w-5 h-5 mx-auto mb-2 text-brand-accent group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-semibold text-brand-text block">Filosofia</span>
+                </button>
+                <button onclick="filterByGenre('Poesia')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
+                    <i data-lucide="feather" class="w-5 h-5 mx-auto mb-2 text-brand-lilac group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-semibold text-brand-text block">Poesia</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LISTAS -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="border-b border-brand-border pb-4">
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-brand-text">Listas & Guias de Leitura</h2>
+            <p class="text-xs sm:text-sm text-brand-muted">Seleções temáticas organizadas por perfil de leitor e proposta intelectual.</p>
+        </div>
+        <div id="home-lists-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="col-span-full flex justify-center py-6"><div class="spinner"></div></div>
+        </div>
+    </div>
+
+    <!-- NEWSLETTER -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-r from-brand-bgSec via-[#2b182e] to-brand-bgSec text-white rounded-2xl p-8 sm:p-12 text-center space-y-6 relative overflow-hidden shadow-2xl border border-brand-border">
+            <div class="max-w-2xl mx-auto space-y-3 relative z-10">
+                <i data-lucide="mail-check" class="w-10 h-10 mx-auto text-brand-lilac opacity-90"></i>
+                <h2 class="font-serif text-2xl sm:text-3xl font-bold">Cartas do Editor & Novas Resenhas</h2>
+                <p class="text-brand-muted text-sm leading-relaxed">Receba quinzenalmente ensaios inéditos, guias de leitura e nossas impressões críticas diretamente em sua caixa de entrada.</p>
+            </div>
+            <form onsubmit="handleNewsletterSubmit(event)" class="max-w-md mx-auto flex flex-col sm:flex-row gap-2 relative z-10">
+                <input type="email" required placeholder="Seu melhor e-mail principal" class="flex-grow px-4 py-3 rounded-lg text-sm text-brand-text bg-brand-bg border border-brand-border placeholder-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent">
+                <button type="submit" class="px-6 py-3 bg-brand-accent hover:bg-brand-accentHover text-white font-semibold text-sm rounded-lg transition-colors shrink-0 shadow">Inscrever-se</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== RESENHAS ===================== -->
+<section id="tab-resenhas" class="tab-page py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="border-b border-brand-border pb-6 space-y-2">
+        <h1 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text">Catálogo de Resenhas Críticas</h1>
+        <p class="text-sm text-brand-muted">Explore análises profundas por gênero ou ordem cronológica.</p>
+    </div>
+    <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center bg-brand-white/80 backdrop-blur-md p-4 rounded-xl border border-brand-border">
+        <div class="flex flex-wrap gap-2 items-center text-xs">
+            <span class="font-semibold text-brand-text mr-2">Filtrar por:</span>
+            <button onclick="filterResenhas('todos')" class="filter-btn active px-3 py-1.5 rounded-lg border border-brand-accent bg-brand-accent text-white">Todos</button>
+            <button onclick="filterResenhas('Romance')" class="filter-btn px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Romance</button>
+            <button onclick="filterResenhas('Clássicos')" class="filter-btn px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Clássicos</button>
+            <button onclick="filterResenhas('Ficção Científica')" class="filter-btn px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Ficção Científica</button>
+            <button onclick="filterResenhas('Filosofia')" class="filter-btn px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Filosofia</button>
+        </div>
+        <div class="text-xs text-brand-muted self-end md:self-auto">Exibindo <span id="resenhas-count">0</span> resenhas</div>
+    </div>
+    <div id="all-reviews-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div class="col-span-full flex justify-center py-10"><div class="spinner"></div></div>
+    </div>
+</section>
+
+<!-- ===================== LIVROS ===================== -->
+<section id="tab-livros" class="tab-page py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="border-b border-brand-border pb-6 space-y-2">
+        <h1 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text">Acervo de Obras Analisadas</h1>
+        <p class="text-sm text-brand-muted">Fichas bibliográficas completas, sinopses e links de aquisição recomendados.</p>
+    </div>
+    <div id="all-books-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+        <div class="col-span-full flex justify-center py-10"><div class="spinner"></div></div>
+    </div>
+</section>
+
+<!-- ===================== FAVORITOS ===================== -->
+<section id="tab-favoritos" class="tab-page py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="border-b border-brand-border pb-6 space-y-2">
+        <h1 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text flex items-center gap-2">
+            <i data-lucide="bookmark" class="w-7 h-7 text-brand-accent"></i>
+            <span>Minha Lista de Leitura Salva</span>
+        </h1>
+        <p class="text-sm text-brand-muted">Sua biblioteca pessoal de obras e resenhas salvas para consultar mais tarde.</p>
+    </div>
+    <div id="bookmarks-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</section>
+
+<!-- ===================== AUTORES ===================== -->
+<section id="tab-autores" class="tab-page py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="border-b border-brand-border pb-6 space-y-2">
+        <h1 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text">Autores em Destaque</h1>
+        <p class="text-sm text-brand-muted">Perfis biográficos, contexto histórico e obras analisadas em nosso periódico.</p>
+    </div>
+    <div id="all-authors-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="col-span-full flex justify-center py-10"><div class="spinner"></div></div>
+    </div>
+</section>
+
+<!-- ===================== LISTAS ===================== -->
+<section id="tab-listas" class="tab-page py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="border-b border-brand-border pb-6 space-y-2">
+        <h1 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text">Listas & Guias de Leitura</h1>
+        <p class="text-sm text-brand-muted">Curadorias temáticas para leitores em busca de novos caminhos literários.</p>
+    </div>
+    <div id="all-lists-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="col-span-full flex justify-center py-10"><div class="spinner"></div></div>
+    </div>
+</section>
+
+<!-- ===================== SOBRE ===================== -->
+<section id="tab-sobre" class="tab-page py-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div class="border-b border-brand-border pb-6 space-y-2">
+        <h1 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text">Sobre o Entre Páginas</h1>
+        <p class="text-sm text-brand-muted">"Livros que nos transformam. Histórias que permanecem."</p>
+    </div>
+    <div class="prose max-w-none text-brand-text space-y-6 text-sm sm:text-base leading-relaxed font-sans bg-brand-white/80 backdrop-blur-md p-6 sm:p-8 rounded-xl border border-brand-border">
+        <p>O <strong>Entre Páginas</strong> nasceu da necessidade de resgatar o espaço da crítica literária atenta, pausada e independente na internet brasileira. Em uma era dominada por resumos rápidos e notas instantâneas, propomos uma conversa mais profunda sobre a arte do livro.</p>
+    </div>
+</section>
+
+<!-- ===================== ADMIN ===================== -->
+<section id="tab-admin" class="tab-page py-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+
+    <!-- LOGIN -->
+    <div id="admin-login-screen" class="max-w-md mx-auto">
+        <div class="bg-brand-white/80 backdrop-blur-md border border-brand-border rounded-2xl p-8 space-y-6 shadow-2xl">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-brand-bgSec border border-brand-border mb-2">
+                    <i data-lucide="lock" class="w-7 h-7 text-brand-accent"></i>
+                </div>
+                <h2 class="font-serif text-2xl font-bold text-brand-text">Área do Administrador</h2>
+                <p class="text-xs text-brand-muted">Acesso restrito ao editor do Entre Páginas.</p>
+            </div>
+            <form id="login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-brand-text mb-1.5">E-mail</label>
+                    <input type="email" id="login-email" required placeholder="admin@entrepaginas.com.br" class="cms-input">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-brand-text mb-1.5">Senha</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="cms-input">
+                </div>
+                <button type="submit" id="login-btn" class="w-full py-3 bg-brand-accent hover:bg-brand-accentHover text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <i data-lucide="log-in" class="w-4 h-4"></i> Entrar no Painel
+                </button>
+            </form>
+            <p class="text-center text-xs text-brand-muted">Esqueceu sua senha? Entre em contato com o suporte técnico.</p>
+        </div>
+    </div>
+
+    <!-- PAINEL CMS (visível após login) -->
+    <div id="admin-cms-screen" class="hidden space-y-8">
+        <div class="border-b border-brand-border pb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-accent uppercase tracking-wider">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> Painel Restrito do Editor
+                </div>
+                <h1 class="font-serif text-2xl sm:text-3xl font-bold text-brand-text">Gerenciador de Conteúdo</h1>
+                <p class="text-xs text-brand-muted mt-1">Logado como: <span id="admin-email-display" class="text-brand-lilac font-medium"></span></p>
+            </div>
+            <button onclick="handleAdminLogout()" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium border border-brand-border rounded-lg text-brand-muted hover:text-brand-accent hover:border-brand-accent transition-colors">
+                <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sair
+            </button>
+        </div>
+
+        <!-- TABS CMS -->
+        <div class="flex gap-2 border-b border-brand-border pb-0 overflow-x-auto">
+            <button onclick="switchCmsTab('novo')" id="cms-tab-novo" class="cms-tab-btn active px-4 py-2.5 text-xs font-semibold border-b-2 border-brand-accent text-brand-accent whitespace-nowrap">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5 inline mr-1"></i> Nova Postagem
+            </button>
+            <button onclick="switchCmsTab('gerenciar')" id="cms-tab-gerenciar" class="cms-tab-btn px-4 py-2.5 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text whitespace-nowrap">
+                <i data-lucide="list" class="w-3.5 h-3.5 inline mr-1"></i> Gerenciar Postagens
+            </button>
+            <button onclick="switchCmsTab('comentarios')" id="cms-tab-comentarios" class="cms-tab-btn px-4 py-2.5 text-xs font-semibold border-b-2 border-transparent text-brand-muted hover:text-brand-text whitespace-nowrap">
+                <i data-lucide="message-square" class="w-3.5 h-3.5 inline mr-1"></i> Comentários
+            </button>
+        </div>
+
+        <!-- CMS: NOVA POSTAGEM -->
+        <div id="cms-panel-novo" class="cms-panel bg-brand-white/80 backdrop-blur-md border border-brand-border rounded-xl p-6 space-y-6">
+            <h2 class="font-serif text-xl font-bold text-brand-text flex items-center gap-2">
+                <i data-lucide="file-plus" class="w-5 h-5 text-brand-accent"></i>
+                <span id="cms-form-title-label">Cadastrar Nova Resenha</span>
+            </h2>
+            <form id="cms-book-form" onsubmit="handleCMSSave(event)" class="space-y-5 text-xs sm:text-sm">
+                <input type="hidden" id="cms-edit-id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">Título do Livro *</label>
+                        <input type="text" id="cms-title" required placeholder="Ex: Dom Casmurro" class="cms-input">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">Autor *</label>
+                        <input type="text" id="cms-author" required placeholder="Ex: Machado de Assis" class="cms-input">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">Gênero Literário *</label>
+                        <select id="cms-genre" class="cms-input">
+                            <option value="Romance">Romance</option>
+                            <option value="Clássicos">Clássicos</option>
+                            <option value="Ficção Científica">Ficção Científica</option>
+                            <option value="Filosofia">Filosofia</option>
+                            <option value="Poesia">Poesia</option>
+                            <option value="Suspense">Suspense</option>
+                            <option value="Fantasia">Fantasia</option>
+                            <option value="Terror">Terror</option>
+                            <option value="Autoajuda">Autoajuda</option>
+                            <option value="Biografia">Biografia</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">Editora</label>
+                        <input type="text" id="cms-publisher" placeholder="Ex: Companhia das Letras" class="cms-input">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">Ano de Publicação</label>
+                        <input type="number" id="cms-year" placeholder="Ex: 2023" min="1000" max="2099" class="cms-input">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">URL da Capa</label>
+                        <input type="url" id="cms-cover" placeholder="https://..." class="cms-input">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">Link Afiliado (Amazon etc.)</label>
+                        <input type="url" id="cms-affiliate" placeholder="https://amazon.com.br/..." class="cms-input">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">Preço Físico</label>
+                        <input type="text" id="cms-price-physical" placeholder="R$ 49,90" class="cms-input">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">Preço Kindle/eBook</label>
+                        <input type="text" id="cms-price-kindle" placeholder="R$ 24,90" class="cms-input">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-brand-text mb-1.5">Tempo de Leitura</label>
+                        <input type="text" id="cms-read-time" placeholder="8 min de leitura" class="cms-input">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-brand-text mb-1.5">Resumo / Chamada (Excerpt) *</label>
+                    <textarea id="cms-excerpt" rows="2" required placeholder="Breve descrição do livro para as listagens..." class="cms-input"></textarea>
+                </div>
+                <div>
+                    <label class="block font-semibold text-brand-text mb-1.5">Resenha Completa (HTML permitido)</label>
+                    <textarea id="cms-review" rows="8" placeholder="Escreva a resenha crítica completa. Pode usar HTML para formatar..." class="cms-input font-mono"></textarea>
+                </div>
+                <div>
+                    <label class="block font-semibold text-brand-text mb-1.5">Público-Alvo</label>
+                    <input type="text" id="cms-audience" placeholder="Ex: Leitores de romance paranormal, adultos..." class="cms-input">
+                </div>
+                <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="cms-is-featured" class="accent-brand-accent w-4 h-4">
+                        <span class="text-xs font-medium text-brand-text">Destaque na Página Inicial</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="cms-is-published" checked class="accent-brand-accent w-4 h-4">
+                        <span class="text-xs font-medium text-brand-text">Publicado (visível ao público)</span>
+                    </label>
+                </div>
+                <div class="flex justify-end gap-3 pt-2 border-t border-brand-border">
+                    <button type="button" onclick="resetCmsForm()" class="px-4 py-2 text-xs font-medium border border-brand-border rounded-lg text-brand-muted hover:text-brand-text transition-colors">
+                        Cancelar / Limpar
+                    </button>
+                    <button type="submit" id="cms-save-btn" class="px-6 py-2 bg-brand-accent hover:bg-brand-accentHover text-white font-semibold rounded-lg flex items-center gap-1.5 text-xs transition-colors">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span id="cms-save-label">Publicar Resenha</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- CMS: GERENCIAR POSTAGENS -->
+        <div id="cms-panel-gerenciar" class="cms-panel hidden space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="font-serif text-xl font-bold text-brand-text">Todas as Postagens</h2>
+                <button onclick="loadCmsBooks()" class="text-xs text-brand-muted hover:text-brand-accent flex items-center gap-1 transition-colors">
+                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Atualizar
+                </button>
+            </div>
+            <div id="cms-books-list" class="space-y-3">
+                <div class="flex justify-center py-6"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <!-- CMS: COMENTÁRIOS -->
+        <div id="cms-panel-comentarios" class="cms-panel hidden space-y-4">
+            <h2 class="font-serif text-xl font-bold text-brand-text">Moderação de Comentários</h2>
+            <div id="cms-comments-list" class="space-y-3">
+                <div class="flex justify-center py-6"><div class="spinner"></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== POLÍTICA ===================== -->
+<section id="tab-politica-afiliados" class="tab-page py-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <h1 class="font-serif text-3xl font-bold text-brand-text">Política de Afiliados e Transparência Comercial</h1>
+    <div class="text-sm text-brand-muted leading-relaxed space-y-4 bg-brand-white/80 backdrop-blur-md p-6 rounded-xl border border-brand-border">
+        <p>O <strong>Entre Páginas</strong> preza pela transparência e honestidade intelectual perante seus leitores.</p>
+        <p>Alguns dos links externos para livrarias digitais são links de afiliados. Ao comprar por eles, podemos receber comissão sem acréscimo de custo para você.</p>
+    </div>
+</section>
+
+<!-- MODAL LIVRO -->
+<div id="book-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden overflow-y-auto p-4 sm:p-6 flex justify-center items-start">
+    <div class="bg-brand-bg/95 border border-brand-border rounded-2xl max-w-4xl w-full my-8 p-6 sm:p-10 relative shadow-2xl space-y-8">
+        <button onclick="closeBookModal()" class="absolute top-4 right-4 bg-brand-bgSec hover:bg-brand-border p-2 rounded-full text-brand-text transition-colors">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div id="book-modal-content"></div>
+    </div>
+</div>
+
+<!-- MODAL CONFIRMAR EXCLUSÃO -->
+<div id="delete-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-brand-bg/97 border border-brand-border rounded-2xl max-w-sm w-full p-8 shadow-2xl space-y-5 text-center">
+        <div class="w-14 h-14 rounded-full bg-rose-950/60 border border-rose-800/40 flex items-center justify-center mx-auto">
+            <i data-lucide="trash-2" class="w-6 h-6 text-rose-400"></i>
+        </div>
+        <h3 class="font-serif text-xl font-bold text-brand-text">Excluir Postagem?</h3>
+        <p class="text-sm text-brand-muted">Esta ação é <strong class="text-rose-400">irreversível</strong>. O livro e todos os comentários associados serão removidos permanentemente do banco de dados.</p>
+        <p class="text-xs font-semibold text-brand-text" id="delete-book-title"></p>
+        <div class="flex gap-3 justify-center pt-2">
+            <button onclick="closeDeleteModal()" class="px-5 py-2 border border-brand-border rounded-lg text-xs font-medium text-brand-muted hover:text-brand-text transition-colors">Cancelar</button>
+            <button onclick="confirmDelete()" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Excluir definitivamente
+            </button>
+        </div>
+    </div>
+</div>
+
+</main>
+
+<footer class="bg-brand-bgSec/95 backdrop-blur-md border-t border-brand-border text-brand-text py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 text-center text-xs text-brand-muted">
+        <p>© 2026 Entre Páginas Periódico Cultural. Todos os direitos reservados.</p>
+    </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// SUPABASE CONFIG
+// ═══════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://evfujanqkaoaxurknseg.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2ZnVqYW5xa2FvYXh1cmtuc2VnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM3MTM0OTcsImV4cCI6MjEwOTI4OTQ5N30.GvrZzO1_hXao12E8a5aYU1TaWFAADzbJIQPKoJWf0_w';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let booksCache = [];
+let savedBookmarks = JSON.parse(localStorage.getItem('entre_paginas_bookmarks') || '[]');
+let currentAdminUser = null;
+let deleteTargetId = null;
+let deleteTargetTitle = '';
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => { t.className = `toast ${type}`; }, 3200);
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-page').forEach(p => { p.classList.remove('active'); });
+    const target = document.getElementById('tab-' + tabId);
+    if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    closeMobileMenu();
+    if (tabId === 'favoritos') renderBookmarksPage();
+    if (tabId === 'resenhas') renderResenhas();
+    if (tabId === 'livros') renderLivros();
+    if (tabId === 'autores') renderAutores();
+    if (tabId === 'listas') renderListas();
+    if (tabId === 'admin') checkAdminState();
+    if (window.lucide) lucide.createIcons();
+}
+
+function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+}
+function closeMobileMenu() {
+    document.getElementById('mobile-menu').classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════════════════
+// BOOKMARKS
+// ═══════════════════════════════════════════════════════
+function updateBookmarkBadge() {
+    const el = document.getElementById('nav-bookmarks-count');
+    if (el) el.textContent = savedBookmarks.length;
+}
+
+function toggleBookmark(bookId) {
+    const idx = savedBookmarks.indexOf(bookId);
+    if (idx > -1) savedBookmarks.splice(idx, 1);
+    else savedBookmarks.push(bookId);
+    localStorage.setItem('entre_paginas_bookmarks', JSON.stringify(savedBookmarks));
+    updateBookmarkBadge();
+    const isSaved = savedBookmarks.includes(bookId);
+    document.querySelectorAll(`[data-bm-id="${bookId}"]`).forEach(el => {
+        el.setAttribute('class', isSaved ? 'w-4 h-4 text-brand-accent fill-current' : 'w-4 h-4');
+    });
+    showToast(isSaved ? '📌 Livro salvo na sua lista!' : '🗑️ Removido da lista.', isSaved ? 'success' : 'error');
+    if (document.getElementById('tab-favoritos').classList.contains('active')) renderBookmarksPage();
+}
+
+function renderBookmarksPage() {
+    const container = document.getElementById('bookmarks-container');
+    if (!container) return;
+    const saved = booksCache.filter(b => savedBookmarks.includes(b.id));
+    if (saved.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-center py-12 bg-brand-white/40 border border-brand-border rounded-xl space-y-3">
+            <i data-lucide="bookmark" class="w-10 h-10 mx-auto text-brand-muted"></i>
+            <h3 class="font-serif text-lg font-bold text-brand-text">Sua lista está vazia</h3>
+            <p class="text-xs text-brand-muted">Clique no ícone de marcador de qualquer livro para salvar suas leituras desejadas.</p>
+            <button onclick="switchTab('resenhas')" class="px-4 py-2 bg-brand-accent text-white text-xs font-semibold rounded-lg">Explorar Resenhas</button>
+        </div>`;
+    } else {
+        container.innerHTML = saved.map(book => `
+            <article class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-xl p-4 flex gap-4 items-center">
+                <img src="${book.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" class="w-20 aspect-book object-cover rounded shadow">
+                <div class="space-y-1.5 flex-grow">
+                    <span class="text-[10px] font-bold text-brand-lilac uppercase">${book.genre}</span>
+                    <h4 class="font-serif text-sm font-bold text-brand-text">${book.title}</h4>
+                    <p class="text-[11px] text-brand-muted">${book.author}</p>
+                    <div class="pt-2 flex items-center gap-2">
+                        <button onclick="viewBookDetail('${book.id}')" class="px-3 py-1 bg-brand-accent text-white text-[11px] rounded font-semibold">Ler Resenha</button>
+                        <button onclick="toggleBookmark('${book.id}')" class="text-[11px] text-brand-muted hover:text-brand-accent underline">Remover</button>
+                    </div>
+                </div>
+            </article>`).join('');
+    }
+    if (window.lucide) lucide.createIcons();
+}
+
+// ═══════════════════════════════════════════════════════
+// LOAD DATA FROM SUPABASE
+// ═══════════════════════════════════════════════════════
+async function loadBooks() {
+    const { data, error } = await sb.from('books').select('*').eq('is_published', true).order('created_at', { ascending: false });
+    if (error) { console.error('loadBooks:', error); return []; }
+    booksCache = data || [];
+    return booksCache;
+}
+
+async function loadAuthors() {
+    const { data, error } = await sb.from('authors').select('*').order('name');
+    if (error) return [];
+    return data || [];
+}
+
+async function loadLists() {
+    const { data, error } = await sb.from('reading_lists').select('*').order('created_at', { ascending: false });
+    if (error) return [];
+    return data || [];
+}
+
+// ═══════════════════════════════════════════════════════
+// BOOK CARD TEMPLATE
+// ═══════════════════════════════════════════════════════
+function bookCardHtml(book) {
+    const isSaved = savedBookmarks.includes(book.id);
+    return `
+    <article class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-xl overflow-hidden flex flex-col justify-between p-4 space-y-3 relative group">
+        <div class="relative cursor-pointer" onclick="viewBookDetail('${book.id}')">
+            <img src="${book.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" alt="${book.title}" class="w-full aspect-book object-cover rounded shadow-md">
+            ${book.is_featured ? '<span class="absolute top-2 left-2 bg-brand-accent text-white text-[10px] font-bold px-2 py-0.5 rounded">Destaque</span>' : ''}
+            <button onclick="event.stopPropagation(); toggleBookmark('${book.id}')" class="absolute top-2 right-2 p-1.5 bg-brand-bg/80 backdrop-blur-md rounded-full text-brand-text hover:text-brand-accent transition-colors">
+                <i data-lucide="bookmark" data-bm-id="${book.id}" class="w-4 h-4 ${isSaved ? 'text-brand-accent fill-current' : ''}"></i>
+            </button>
+        </div>
+        <div class="space-y-2">
+            <div class="flex items-center justify-between text-[10px] text-brand-muted">
+                <span class="font-bold text-brand-lilac uppercase">${book.genre}</span>
+                <span>${book.read_time || '6 min'}</span>
+            </div>
+            <h3 class="font-serif text-base font-bold text-brand-text cursor-pointer hover:text-brand-lilac" onclick="viewBookDetail('${book.id}')">${book.title}</h3>
+            <p class="text-xs text-brand-muted">${book.author}</p>
+            <p class="text-xs text-brand-muted line-clamp-2">${book.excerpt || ''}</p>
+        </div>
+        <button onclick="viewBookDetail('${book.id}')" class="py-2 bg-brand-accent text-white text-xs font-semibold rounded-md hover:bg-brand-accentHover transition-colors">Ler resenha</button>
+    </article>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER PAGES
+// ═══════════════════════════════════════════════════════
+async function renderHome() {
+    const books = await loadBooks();
+
+    // Featured book
+    const featured = books.find(b => b.is_featured) || books[0];
+    if (featured) {
+        document.getElementById('featured-book-section').innerHTML = `
+        <div class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-2xl p-6 sm:p-10 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            <div class="md:col-span-4 flex flex-col items-center gap-3">
+                <div class="relative group cursor-pointer w-48 sm:w-56" onclick="viewBookDetail('${featured.id}')">
+                    <img src="${featured.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" alt="${featured.title}" class="w-full aspect-book object-cover rounded-lg shadow-md group-hover:shadow-xl transition-all duration-300">
+                    <span class="absolute top-3 left-3 bg-brand-accent text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow">Escolha do Editor</span>
+                </div>
+                <button onclick="toggleBookmark('${featured.id}')" class="text-xs text-brand-muted hover:text-brand-accent flex items-center gap-1.5 transition-colors">
+                    <i data-lucide="bookmark" data-bm-id="${featured.id}" class="w-4 h-4 ${savedBookmarks.includes(featured.id) ? 'text-brand-accent fill-current' : ''}"></i>
+                    <span>Salvar na minha lista</span>
+                </button>
+            </div>
+            <div class="md:col-span-8 space-y-4">
+                <div class="flex flex-wrap items-center gap-3 text-xs text-brand-muted">
+                    <span class="font-medium text-brand-lilac uppercase tracking-wider">${featured.genre}</span>
+                    <span>•</span>
+                    <span class="inline-flex items-center gap-1 text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded">
+                        <i data-lucide="shield-check" class="w-3 h-3"></i> ${featured.spoiler_status || '🟢 Livre de Spoilers'}
+                    </span>
+                    <span>•</span>
+                    <span class="inline-flex items-center gap-1 text-brand-lilac">
+                        <i data-lucide="clock" class="w-3 h-3"></i> ${featured.read_time || '8 min de leitura'}
+                    </span>
+                </div>
+                <h2 class="font-serif text-2xl sm:text-4xl font-bold text-brand-text hover:text-brand-lilac transition-colors cursor-pointer" onclick="viewBookDetail('${featured.id}')">
+                    ${featured.title} — ${featured.author}
+                </h2>
+                <p class="text-brand-muted text-sm sm:text-base leading-relaxed">${featured.excerpt || ''}</p>
+                <div class="bg-brand-bgSec/60 rounded-xl p-4 border border-brand-border space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div class="bg-brand-white/40 p-2.5 rounded-lg border border-brand-border/60 flex items-center justify-between">
+                            <div><div class="font-medium text-brand-text">Livro Físico</div><div class="text-[11px] text-brand-muted">Amazon Brasil</div></div>
+                            <div class="text-right"><span class="font-bold text-emerald-400">${featured.price_physical || 'R$ 49,90'}</span><button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')" class="block text-[10px] text-brand-accent hover:underline">Ver na Loja</button></div>
+                        </div>
+                        <div class="bg-brand-white/40 p-2.5 rounded-lg border border-brand-border/60 flex items-center justify-between">
+                            <div><div class="font-medium text-brand-text">eBook / Kindle</div><div class="text-[11px] text-brand-muted">Kindle Unlimited</div></div>
+                            <div class="text-right"><span class="font-bold text-emerald-400">${featured.price_kindle || 'R$ 24,90'}</span><button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')" class="block text-[10px] text-brand-accent hover:underline">Ver Kindle</button></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-2">
+                    <button onclick="viewBookDetail('${featured.id}')" class="px-5 py-2.5 bg-brand-accent hover:bg-brand-accentHover text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 shadow-lg">
+                        <span>Ler Análise Completa</span>
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    // Home grid (últimas 6)
+    const grid = document.getElementById('home-reviews-grid');
+    if (grid) grid.innerHTML = books.slice(0, 6).map(bookCardHtml).join('') || '<p class="text-brand-muted text-sm text-center col-span-full py-8">Nenhuma resenha publicada ainda.</p>';
+
+    // Listas
+    const lists = await loadLists();
+    const listsGrid = document.getElementById('home-lists-grid');
+    if (listsGrid) listsGrid.innerHTML = lists.length ? lists.slice(0, 4).map(listCardHtml).join('') : '<p class="text-brand-muted text-sm col-span-full">Nenhuma lista cadastrada.</p>';
+
+    if (window.lucide) lucide.createIcons();
+}
+
+async function renderResenhas(genreFilter = null) {
+    const books = booksCache.length ? booksCache : await loadBooks();
+    const filtered = genreFilter ? books.filter(b => b.genre === genreFilter) : books;
+    document.getElementById('resenhas-count').textContent = filtered.length;
+    document.getElementById('all-reviews-grid').innerHTML = filtered.length
+        ? filtered.map(bookCardHtml).join('')
+        : '<p class="col-span-full text-center text-brand-muted py-10">Nenhuma resenha encontrada para este filtro.</p>';
+    if (window.lucide) lucide.createIcons();
+}
+
+async function renderLivros() {
+    const books = booksCache.length ? booksCache : await loadBooks();
+    document.getElementById('all-books-grid').innerHTML = books.length ? books.map(b => `
+        <div class="cursor-pointer group" onclick="viewBookDetail('${b.id}')">
+            <img src="${b.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" class="w-full aspect-book object-cover rounded-lg shadow-md group-hover:shadow-xl transition-all">
+            <div class="mt-2 space-y-0.5">
+                <p class="text-xs font-bold text-brand-lilac uppercase">${b.genre}</p>
+                <p class="text-xs font-semibold text-brand-text">${b.title}</p>
+                <p class="text-[11px] text-brand-muted">${b.author}</p>
+            </div>
+        </div>`).join('')
+        : '<p class="col-span-full text-center text-brand-muted py-10">Nenhum livro cadastrado.</p>';
+    if (window.lucide) lucide.createIcons();
+}
+
+async function renderAutores() {
+    const authors = await loadAuthors();
+    document.getElementById('all-authors-grid').innerHTML = authors.length ? authors.map(a => `
+        <div class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-xl p-6 space-y-3 text-center">
+            <img src="${a.photo_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80'" class="w-24 h-24 rounded-full object-cover mx-auto border-2 border-brand-border shadow">
+            <h3 class="font-serif text-lg font-bold text-brand-text">${a.name}</h3>
+            <p class="text-xs text-brand-muted leading-relaxed">${a.bio || ''}</p>
+        </div>`).join('')
+        : '<p class="col-span-full text-center text-brand-muted py-10">Nenhum autor cadastrado.</p>';
+    if (window.lucide) lucide.createIcons();
+}
+
+async function renderListas() {
+    const lists = await loadLists();
+    document.getElementById('all-lists-grid').innerHTML = lists.length ? lists.map(listCardHtml).join('') : '<p class="col-span-full text-center text-brand-muted py-10">Nenhuma lista cadastrada.</p>';
+    if (window.lucide) lucide.createIcons();
+}
+
+function listCardHtml(l) {
+    return `
+    <div class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-xl p-6 space-y-3 hover:border-brand-lilac transition-colors">
+        ${l.tag ? `<span class="inline-block text-[10px] font-bold text-brand-accent uppercase tracking-wider border border-brand-accent/30 bg-brand-accent/10 px-2.5 py-0.5 rounded-full">${l.tag}</span>` : ''}
+        <h3 class="font-serif text-lg font-bold text-brand-text">${l.title}</h3>
+        <p class="text-xs text-brand-muted leading-relaxed">${l.excerpt || ''}</p>
+        <div class="flex items-center gap-2 text-xs text-brand-muted pt-1">
+            <i data-lucide="book" class="w-3.5 h-3.5"></i>
+            <span>${l.book_count || 0} livros selecionados</span>
+        </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// BOOK DETAIL MODAL
+// ═══════════════════════════════════════════════════════
+async function viewBookDetail(bookId) {
+    const book = booksCache.find(b => b.id === bookId);
+    if (!book) return;
+    const isSaved = savedBookmarks.includes(book.id);
+
+    // Load comments
+    const { data: comments } = await sb.from('comments').select('*').eq('book_id', bookId).eq('approved', true).order('created_at', { ascending: false });
+    const { data: votes } = await sb.from('helpful_votes').select('is_yes').eq('book_id', bookId);
+    const yesVotes = votes ? votes.filter(v => v.is_yes).length : 0;
+    const noVotes = votes ? votes.filter(v => !v.is_yes).length : 0;
+
+    document.getElementById('book-modal-content').innerHTML = `
+    <div class="space-y-6">
+        <div class="border-b border-brand-border pb-4 space-y-2">
+            <div class="flex flex-wrap items-center gap-2 text-xs text-brand-muted">
+                <span class="font-bold text-brand-lilac uppercase">${book.genre}</span>
+                <span>•</span>
+                <span>${book.read_time || '8 min de leitura'}</span>
+                <span>•</span>
+                <span class="text-emerald-400 font-medium">${book.spoiler_status || '🟢 Livre de Spoilers'}</span>
+            </div>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-brand-text">${book.title} — ${book.author}</h2>
+            <button onclick="toggleBookmark('${book.id}')" class="inline-flex items-center gap-1.5 text-xs text-brand-muted hover:text-brand-accent transition-colors pt-1">
+                <i data-lucide="bookmark" data-bm-id="${book.id}" class="w-4 h-4 ${isSaved ? 'text-brand-accent fill-current' : ''}"></i>
+                <span>${isSaved ? 'Salvo na sua lista' : 'Salvar na minha lista'}</span>
+            </button>
+        </div>
+
+        <!-- PREÇOS -->
+        <div class="bg-brand-bgSec/60 rounded-xl p-4 border border-brand-border space-y-3">
+            <span class="flex items-center gap-1.5 text-xs font-semibold text-brand-text"><i data-lucide="shopping-bag" class="w-4 h-4 text-brand-accent"></i> Onde comprar pelo melhor preço</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div class="bg-brand-white/40 p-3 rounded-lg border border-brand-border/60 flex items-center justify-between">
+                    <div><div class="font-medium text-brand-text">Edição Impressa</div><div class="text-[11px] text-brand-muted">Amazon Brasil</div></div>
+                    <div class="text-right"><span class="font-bold text-emerald-400">${book.price_physical || 'R$ 49,90'}</span><button onclick="window.open('${book.affiliate_link || 'https://amazon.com.br'}','_blank')" class="block text-[11px] text-brand-accent font-semibold hover:underline">Consultar Loja</button></div>
+                </div>
+                <div class="bg-brand-white/40 p-3 rounded-lg border border-brand-border/60 flex items-center justify-between">
+                    <div><div class="font-medium text-brand-text">eBook / Digital</div><div class="text-[11px] text-brand-muted">Kindle</div></div>
+                    <div class="text-right"><span class="font-bold text-emerald-400">${book.price_kindle || 'R$ 24,90'}</span><button onclick="window.open('${book.affiliate_link || 'https://amazon.com.br'}','_blank')" class="block text-[11px] text-brand-accent font-semibold hover:underline">Ver no Kindle</button></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESENHA -->
+        <div class="text-sm text-brand-text leading-relaxed font-sans">${book.review || '<p class="text-brand-muted">Resenha em elaboração.</p>'}</div>
+
+        <!-- VOTOS -->
+        <div class="bg-brand-bgSec/40 p-4 rounded-xl border border-brand-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            <span class="text-brand-muted">Esta resenha foi útil para sua decisão de leitura?</span>
+            <div class="flex items-center gap-2">
+                <button onclick="voteHelpful('${book.id}', true)" class="px-3 py-1.5 bg-brand-white/60 hover:bg-brand-border border border-brand-border rounded-lg flex items-center gap-1.5 font-medium">
+                    <i data-lucide="thumbs-up" class="w-3.5 h-3.5 text-emerald-400"></i> Sim (<span id="vote-yes-${book.id}">${yesVotes}</span>)
+                </button>
+                <button onclick="voteHelpful('${book.id}', false)" class="px-3 py-1.5 bg-brand-white/60 hover:bg-brand-border border border-brand-border rounded-lg flex items-center gap-1.5 font-medium">
+                    <i data-lucide="thumbs-down" class="w-3.5 h-3.5 text-rose-400"></i> Não (<span id="vote-no-${book.id}">${noVotes}</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- COMENTÁRIOS -->
+        <div class="border-t border-brand-border pt-6 space-y-4">
+            <h4 class="font-serif text-lg font-bold text-brand-text flex items-center gap-2">
+                <i data-lucide="message-square" class="w-4 h-4 text-brand-lilac"></i> Discussão de Leitores
+            </h4>
+            <form id="comment-form-${book.id}" onsubmit="handleAddComment(event,'${book.id}')" class="space-y-3 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input type="text" id="comment-name-${book.id}" required placeholder="Seu nome ou apelido" class="cms-input">
+                </div>
+                <textarea id="comment-text-${book.id}" required rows="2" placeholder="Deixe seu comentário..." class="cms-input"></textarea>
+                <button type="submit" class="px-4 py-2 bg-brand-accent text-white font-semibold rounded-lg hover:bg-brand-accentHover text-xs">Publicar Comentário</button>
+            </form>
+            <div id="comments-list-${book.id}" class="space-y-2 pt-2">
+                ${(comments || []).map(c => `
+                <div class="p-3 bg-brand-bgSec/40 border border-brand-border/60 rounded-lg space-y-1">
+                    <div class="flex justify-between items-center text-[11px]">
+                        <span class="font-bold text-brand-text">${c.name}</span>
+                        <span class="text-brand-muted">${new Date(c.created_at).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                    <p class="text-xs text-brand-muted">${c.text}</p>
+                </div>`).join('')}
+                ${(!comments || !comments.length) ? '<p class="text-xs text-brand-muted text-center py-2">Seja o primeiro a comentar!</p>' : ''}
+            </div>
+        </div>
+    </div>`;
+
+    document.getElementById('book-modal').classList.remove('hidden');
+    if (window.lucide) lucide.createIcons();
+}
+
+function closeBookModal() {
+    document.getElementById('book-modal').classList.add('hidden');
+}
+
+async function voteHelpful(bookId, isYes) {
+    await sb.from('helpful_votes').insert({ book_id: bookId, is_yes: isYes });
+    const { data } = await sb.from('helpful_votes').select('is_yes').eq('book_id', bookId);
+    const y = data ? data.filter(v => v.is_yes).length : 0;
+    const n = data ? data.filter(v => !v.is_yes).length : 0;
+    const yelEl = document.getElementById(`vote-yes-${bookId}`);
+    const noEl = document.getElementById(`vote-no-${bookId}`);
+    if (yelEl) yelEl.textContent = y;
+    if (noEl) noEl.textContent = n;
+    showToast('Agradecemos pelo seu voto! 🙏');
+}
+
+async function handleAddComment(e, bookId) {
+    e.preventDefault();
+    const name = document.getElementById(`comment-name-${bookId}`).value.trim();
+    const text = document.getElementById(`comment-text-${bookId}`).value.trim();
+    if (!name || !text) return;
+    const { error } = await sb.from('comments').insert({ book_id: bookId, name, text, approved: true });
+    if (error) { showToast('Erro ao publicar comentário.', 'error'); return; }
+    document.getElementById(`comment-form-${bookId}`).reset();
+    const listEl = document.getElementById(`comments-list-${bookId}`);
+    if (listEl) {
+        const newComment = `<div class="p-3 bg-brand-bgSec/40 border border-brand-border/60 rounded-lg space-y-1">
+            <div class="flex justify-between items-center text-[11px]">
+                <span class="font-bold text-brand-text">${name}</span>
+                <span class="text-brand-muted">Agora mesmo</span>
+            </div>
+            <p class="text-xs text-brand-muted">${text}</p>
+        </div>`;
+        listEl.insertAdjacentHTML('afterbegin', newComment);
+    }
+    showToast('✅ Comentário publicado!');
+}
+
+// ═══════════════════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════════════════
+function openSearchModal() { document.getElementById('search-modal').classList.remove('hidden'); document.getElementById('global-search-input').focus(); }
+function closeSearchModal() { document.getElementById('search-modal').classList.add('hidden'); }
+
+function handleGlobalSearch(query) {
+    const container = document.getElementById('search-results-container');
+    if (query.length < 2) { container.innerHTML = '<p class="text-sm text-brand-muted text-center py-6">Digite ao menos 2 caracteres.</p>'; return; }
+    const q = query.toLowerCase();
+    const results = booksCache.filter(b => b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) || b.genre.toLowerCase().includes(q));
+    container.innerHTML = results.length
+        ? results.map(b => `<div class="py-3 cursor-pointer text-sm text-brand-text hover:text-brand-accent transition-colors flex items-center gap-3" onclick="closeSearchModal(); viewBookDetail('${b.id}')">
+            <img src="${b.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" class="w-10 aspect-book object-cover rounded">
+            <div><div class="font-semibold">${b.title}</div><div class="text-xs text-brand-muted">${b.author} · ${b.genre}</div></div>
+        </div>`).join('')
+        : '<p class="text-sm text-brand-muted text-center py-6">Nenhum resultado encontrado.</p>';
+}
+
+function filterSearchCategory(genre) {
+    document.getElementById('global-search-input').value = genre;
+    handleGlobalSearch(genre);
+}
+
+function filterByGenre(genre) {
+    switchTab('resenhas');
+    setTimeout(() => { renderResenhas(genre); }, 100);
+}
+
+function filterResenhas(genre) {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.className = 'filter-btn px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec text-xs';
+    });
+    event.target.className = 'filter-btn active px-3 py-1.5 rounded-lg border border-brand-accent bg-brand-accent text-white text-xs';
+    renderResenhas(genre === 'todos' ? null : genre);
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN AUTH
+// ═══════════════════════════════════════════════════════
+async function checkAdminState() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session && session.user) {
+        currentAdminUser = session.user;
+        showAdminPanel();
+    } else {
+        showLoginScreen();
+    }
+}
+
+function showLoginScreen() {
+    document.getElementById('admin-login-screen').classList.remove('hidden');
+    document.getElementById('admin-cms-screen').classList.add('hidden');
+    document.getElementById('admin-nav-label').textContent = 'Admin';
+}
+
+function showAdminPanel() {
+    document.getElementById('admin-login-screen').classList.add('hidden');
+    document.getElementById('admin-cms-screen').classList.remove('hidden');
+    document.getElementById('admin-email-display').textContent = currentAdminUser.email;
+    document.getElementById('admin-nav-label').textContent = 'CMS';
+    loadCmsBooks();
+}
+
+async function handleAdminLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const btn = document.getElementById('login-btn');
+    btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border-width:2px;"></div> Entrando...';
+    btn.disabled = true;
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+    if (error) {
+        showToast('❌ Credenciais inválidas. Verifique e-mail e senha.', 'error');
+        btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i> Entrar no Painel';
+        btn.disabled = false;
+        if (window.lucide) lucide.createIcons();
+    } else {
+        currentAdminUser = data.user;
+        showToast('✅ Login realizado com sucesso!');
+        showAdminPanel();
+        btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i> Entrar no Painel';
+        btn.disabled = false;
+    }
+}
+
+async function handleAdminLogout() {
+    await sb.auth.signOut();
+    currentAdminUser = null;
+    showLoginScreen();
+    showToast('👋 Sessão encerrada.');
+}
+
+// ═══════════════════════════════════════════════════════
+// CMS TABS
+// ═══════════════════════════════════════════════════════
+function switchCmsTab(tab) {
+    document.querySelectorAll('.cms-tab-btn').forEach(btn => {
+        btn.classList.remove('border-brand-accent', 'text-brand-accent');
+        btn.classList.add('border-transparent', 'text-brand-muted');
+    });
+    document.querySelectorAll('.cms-panel').forEach(p => p.classList.add('hidden'));
+    document.getElementById(`cms-tab-${tab}`).classList.add('border-brand-accent', 'text-brand-accent');
+    document.getElementById(`cms-tab-${tab}`).classList.remove('border-transparent', 'text-brand-muted');
+    document.getElementById(`cms-panel-${tab}`).classList.remove('hidden');
+    if (tab === 'gerenciar') loadCmsBooks();
+    if (tab === 'comentarios') loadCmsComments();
+}
+
+// ═══════════════════════════════════════════════════════
+// CMS CRUD
+// ═══════════════════════════════════════════════════════
+function slugify(text) {
+    return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
+}
+
+async function handleCMSSave(e) {
+    e.preventDefault();
+    const btn = document.getElementById('cms-save-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;"></div> Salvando...';
+
+    const title = document.getElementById('cms-title').value.trim();
+    const editId = document.getElementById('cms-edit-id').value;
+
+    const bookData = {
+        title,
+        author: document.getElementById('cms-author').value.trim(),
+        genre: document.getElementById('cms-genre').value,
+        publisher: document.getElementById('cms-publisher').value.trim(),
+        year: parseInt(document.getElementById('cms-year').value) || null,
+        cover_url: document.getElementById('cms-cover').value.trim(),
+        affiliate_link: document.getElementById('cms-affiliate').value.trim(),
+        price_physical: document.getElementById('cms-price-physical').value.trim() || 'R$ 49,90',
+        price_kindle: document.getElementById('cms-price-kindle').value.trim() || 'R$ 24,90',
+        read_time: document.getElementById('cms-read-time').value.trim() || '6 min de leitura',
+        excerpt: document.getElementById('cms-excerpt').value.trim(),
+        review: document.getElementById('cms-review').value.trim(),
+        target_audience: document.getElementById('cms-audience').value.trim(),
+        is_featured: document.getElementById('cms-is-featured').checked,
+        is_published: document.getElementById('cms-is-published').checked,
+        spoiler_status: '🟢 Livre de Spoilers',
+    };
+
+    let error;
+
+    if (editId) {
+        // EDITAR
+        const res = await sb.from('books').update(bookData).eq('id', editId);
+        error = res.error;
+        if (!error) showToast('✅ Resenha atualizada com sucesso!');
+    } else {
+        // CRIAR
+        bookData.slug = slugify(title);
+        const res = await sb.from('books').insert(bookData);
+        error = res.error;
+        if (!error) showToast('🎉 Nova resenha publicada!');
+    }
+
+    if (error) {
+        showToast('❌ Erro ao salvar: ' + (error.message || 'Tente novamente.'), 'error');
+    } else {
+        resetCmsForm();
+        booksCache = [];
+        await loadBooks();
+        await renderHome();
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> <span id="cms-save-label">Publicar Resenha</span>';
+    if (window.lucide) lucide.createIcons();
+}
+
+function resetCmsForm() {
+    document.getElementById('cms-book-form').reset();
+    document.getElementById('cms-edit-id').value = '';
+    document.getElementById('cms-form-title-label').textContent = 'Cadastrar Nova Resenha';
+    document.getElementById('cms-save-label').textContent = 'Publicar Resenha';
+    document.getElementById('cms-is-published').checked = true;
+}
+
+async function loadCmsBooks() {
+    const container = document.getElementById('cms-books-list');
+    container.innerHTML = '<div class="flex justify-center py-6"><div class="spinner"></div></div>';
+    const { data, error } = await sb.from('books').select('*').order('created_at', { ascending: false });
+    if (error || !data || !data.length) {
+        container.innerHTML = '<p class="text-sm text-brand-muted text-center py-6">Nenhuma postagem encontrada.</p>';
+        return;
+    }
+    container.innerHTML = data.map(book => `
+    <div class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div class="flex gap-3 items-center flex-grow min-w-0">
+            <img src="${book.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" class="w-12 aspect-book object-cover rounded shadow shrink-0">
+            <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-[10px] font-bold text-brand-lilac uppercase">${book.genre}</span>
+                    ${book.is_featured ? '<span class="text-[10px] font-bold text-brand-accent border border-brand-accent/30 px-1.5 py-0.5 rounded">Destaque</span>' : ''}
+                    ${!book.is_published ? '<span class="text-[10px] font-bold text-yellow-400 border border-yellow-400/30 px-1.5 py-0.5 rounded">Rascunho</span>' : ''}
+                </div>
+                <h4 class="text-sm font-semibold text-brand-text truncate">${book.title}</h4>
+                <p class="text-xs text-brand-muted">${book.author} ${book.year ? '· ' + book.year : ''}</p>
+                <p class="text-[11px] text-brand-muted mt-0.5">${new Date(book.created_at).toLocaleDateString('pt-BR')}</p>
+            </div>
+        </div>
+        <div class="flex gap-2 shrink-0">
+            <button onclick="editBook('${book.id}')" class="px-3 py-1.5 bg-brand-bgSec border border-brand-border rounded-lg text-xs font-medium text-brand-text hover:border-brand-lilac hover:text-brand-lilac transition-colors flex items-center gap-1">
+                <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Editar
+            </button>
+            <button onclick="openDeleteModal('${book.id}', '${book.title.replace(/'/g, "\\'")}')" class="px-3 py-1.5 bg-rose-950/60 border border-rose-800/40 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-900/60 transition-colors flex items-center gap-1">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Excluir
+            </button>
+        </div>
+    </div>`).join('');
+    if (window.lucide) lucide.createIcons();
+}
+
+async function editBook(bookId) {
+    const { data: book, error } = await sb.from('books').select('*').eq('id', bookId).single();
+    if (error || !book) { showToast('Erro ao carregar dados.', 'error'); return; }
+
+    switchCmsTab('novo');
+    document.getElementById('cms-edit-id').value = book.id;
+    document.getElementById('cms-title').value = book.title || '';
+    document.getElementById('cms-author').value = book.author || '';
+    document.getElementById('cms-genre').value = book.genre || 'Romance';
+    document.getElementById('cms-publisher').value = book.publisher || '';
+    document.getElementById('cms-year').value = book.year || '';
+    document.getElementById('cms-cover').value = book.cover_url || '';
+    document.getElementById('cms-affiliate').value = book.affiliate_link || '';
+    document.getElementById('cms-price-physical').value = book.price_physical || '';
+    document.getElementById('cms-price-kindle').value = book.price_kindle || '';
+    document.getElementById('cms-read-time').value = book.read_time || '';
+    document.getElementById('cms-excerpt').value = book.excerpt || '';
+    document.getElementById('cms-review').value = book.review || '';
+    document.getElementById('cms-audience').value = book.target_audience || '';
+    document.getElementById('cms-is-featured').checked = book.is_featured || false;
+    document.getElementById('cms-is-published').checked = book.is_published !== false;
+    document.getElementById('cms-form-title-label').textContent = 'Editando: ' + book.title;
+    document.getElementById('cms-save-label').textContent = 'Salvar Alterações';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('📝 Modo de edição ativado.');
+}
+
+function openDeleteModal(id, title) {
+    deleteTargetId = id;
+    deleteTargetTitle = title;
+    document.getElementById('delete-book-title').textContent = '"' + title + '"';
+    document.getElementById('delete-modal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    deleteTargetId = null;
+    document.getElementById('delete-modal').classList.add('hidden');
+}
+
+async function confirmDelete() {
+    if (!deleteTargetId) return;
+    const { error } = await sb.from('books').delete().eq('id', deleteTargetId);
+    closeDeleteModal();
+    if (error) { showToast('❌ Erro ao excluir.', 'error'); return; }
+    showToast('🗑️ Postagem excluída permanentemente.');
+    booksCache = [];
+    await loadBooks();
+    await renderHome();
+    loadCmsBooks();
+}
+
+async function loadCmsComments() {
+    const container = document.getElementById('cms-comments-list');
+    container.innerHTML = '<div class="flex justify-center py-6"><div class="spinner"></div></div>';
+    const { data, error } = await sb.from('comments').select('*, books(title)').order('created_at', { ascending: false }).limit(50);
+    if (error || !data || !data.length) {
+        container.innerHTML = '<p class="text-sm text-brand-muted text-center py-6">Nenhum comentário encontrado.</p>';
+        return;
+    }
+    container.innerHTML = data.map(c => `
+    <div class="bg-brand-white/40 border border-brand-border rounded-xl p-4 flex flex-col sm:flex-row gap-3 items-start justify-between">
+        <div class="space-y-1 flex-grow min-w-0">
+            <div class="flex items-center gap-2 flex-wrap text-[11px]">
+                <span class="font-bold text-brand-text">${c.name}</span>
+                <span class="text-brand-muted">em</span>
+                <span class="text-brand-lilac font-medium truncate">${c.books ? c.books.title : 'Livro removido'}</span>
+                <span class="text-brand-muted ml-auto">${new Date(c.created_at).toLocaleDateString('pt-BR')}</span>
+            </div>
+            <p class="text-xs text-brand-muted">${c.text}</p>
+        </div>
+        <button onclick="deleteComment('${c.id}')" class="px-3 py-1.5 bg-rose-950/60 border border-rose-800/40 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-900/60 transition-colors flex items-center gap-1 shrink-0">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Excluir
+        </button>
+    </div>`).join('');
+    if (window.lucide) lucide.createIcons();
+}
+
+async function deleteComment(commentId) {
+    if (!confirm('Excluir este comentário?')) return;
+    await sb.from('comments').delete().eq('id', commentId);
+    showToast('🗑️ Comentário removido.');
+    loadCmsComments();
+}
+
+// ═══════════════════════════════════════════════════════
+// MISC
+// ═══════════════════════════════════════════════════════
+function handleNewsletterSubmit(e) {
+    e.preventDefault();
+    showToast('✉️ Inscrição realizada com sucesso!');
+    e.target.reset();
+}
+
+// ═══════════════════════════════════════════════════════
+// AUTH STATE LISTENER
+// ═══════════════════════════════════════════════════════
+sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+        currentAdminUser = session.user;
+    } else if (event === 'SIGNED_OUT') {
+        currentAdminUser = null;
+    }
+});
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+window.addEventListener('load', async () => {
+    updateBookmarkBadge();
+    await loadBooks();
+    await renderHome();
+    if (window.lucide) lucide.createIcons();
+});
+</script>
+</body>
+</html>
