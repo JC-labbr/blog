@@ -35,7 +35,7 @@
         }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.383.0/umd/lucide.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.3/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 
     <style>
         body {
@@ -573,7 +573,16 @@
 // ═══════════════════════════════════════════════════════
 const SUPABASE_URL = 'https://evfujanqkaoaxurknseg.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2ZnVqYW5xa2FvYXh1cmtuc2VnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM3MTM0OTcsImV4cCI6MjEwOTI4OTQ5N30.GvrZzO1_hXao12E8a5aYU1TaWFAADzbJIQPKoJWf0_w';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: false
+    },
+    global: {
+        headers: { 'x-application-name': 'entre-paginas' }
+    }
+});
 
 // ═══════════════════════════════════════════════════════
 // STATE
@@ -675,23 +684,36 @@ function renderBookmarksPage() {
 // ═══════════════════════════════════════════════════════
 // LOAD DATA FROM SUPABASE
 // ═══════════════════════════════════════════════════════
+function errHtml(msg) {
+    return `<div class="col-span-full text-center py-10 space-y-2">
+        <i data-lucide="wifi-off" class="w-8 h-8 mx-auto text-brand-muted opacity-50"></i>
+        <p class="text-sm text-brand-muted">${msg}</p>
+    </div>`;
+}
+
 async function loadBooks() {
-    const { data, error } = await sb.from('books').select('*').eq('is_published', true).order('created_at', { ascending: false });
-    if (error) { console.error('loadBooks:', error); return []; }
-    booksCache = data || [];
-    return booksCache;
+    try {
+        const { data, error } = await sb.from('books').select('*').eq('is_published', true).order('created_at', { ascending: false });
+        if (error) { console.error('loadBooks:', error.message); return []; }
+        booksCache = data || [];
+        return booksCache;
+    } catch(e) { console.error('loadBooks catch:', e); return []; }
 }
 
 async function loadAuthors() {
-    const { data, error } = await sb.from('authors').select('*').order('name');
-    if (error) return [];
-    return data || [];
+    try {
+        const { data, error } = await sb.from('authors').select('*').order('name');
+        if (error) { console.error('loadAuthors:', error.message); return []; }
+        return data || [];
+    } catch(e) { return []; }
 }
 
 async function loadLists() {
-    const { data, error } = await sb.from('reading_lists').select('*').order('created_at', { ascending: false });
-    if (error) return [];
-    return data || [];
+    try {
+        const { data, error } = await sb.from('reading_lists').select('*').order('created_at', { ascending: false });
+        if (error) { console.error('loadLists:', error.message); return []; }
+        return data || [];
+    } catch(e) { return []; }
 }
 
 // ═══════════════════════════════════════════════════════
