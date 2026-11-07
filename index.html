@@ -443,8 +443,24 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block font-semibold text-brand-text mb-1.5">URL da Capa</label>
-                        <input type="url" id="cms-cover" placeholder="https://..." class="cms-input">
+                        <label class="block font-semibold text-brand-text mb-1.5">Capa do Livro</label>
+                        <div class="flex gap-2 items-start">
+                            <!-- Preview -->
+                            <div id="cover-preview-wrap" class="shrink-0 w-16 aspect-book rounded overflow-hidden border border-brand-border bg-brand-bgSec hidden">
+                                <img id="cover-preview-img" src="" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-grow space-y-1.5">
+                                <!-- Upload button -->
+                                <label class="flex items-center gap-2 cursor-pointer w-full px-3 py-2 bg-brand-bgSec border border-brand-border rounded-lg hover:border-brand-lilac transition-colors text-xs font-medium text-brand-text">
+                                    <i data-lucide="upload" class="w-3.5 h-3.5 text-brand-accent shrink-0"></i>
+                                    <span id="upload-label">Enviar imagem do computador</span>
+                                    <input type="file" id="cms-cover-file" accept="image/*" class="hidden" onchange="handleCoverUpload(this)">
+                                </label>
+                                <!-- URL fallback -->
+                                <input type="url" id="cms-cover" placeholder="Ou cole URL da imagem..." class="cms-input" oninput="previewCoverUrl(this.value)">
+                                <p id="upload-status" class="text-[10px] text-brand-muted hidden"></p>
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <label class="block font-semibold text-brand-text mb-1.5">Link Afiliado (Amazon etc.)</label>
@@ -737,7 +753,7 @@ function bookCardHtml(book) {
             </div>
             <h3 class="font-serif text-base font-bold text-brand-text cursor-pointer hover:text-brand-lilac" onclick="viewBookDetail('${book.id}')">${book.title}</h3>
             <p class="text-xs text-brand-muted">${book.author}</p>
-            <p class="text-xs text-brand-muted line-clamp-2">${book.excerpt || ''}</p>
+            <p class="text-xs text-brand-muted" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5">${book.excerpt || ''}</p>
         </div>
         <button onclick="viewBookDetail('${book.id}')" class="py-2 bg-brand-accent text-white text-xs font-semibold rounded-md hover:bg-brand-accentHover transition-colors">Ler resenha</button>
     </article>`;
@@ -1112,6 +1128,75 @@ function switchCmsTab(tab) {
 }
 
 // ═══════════════════════════════════════════════════════
+// COVER UPLOAD & PREVIEW
+// ═══════════════════════════════════════════════════════
+function showCoverPreview(url) {
+    const wrap = document.getElementById('cover-preview-wrap');
+    const img  = document.getElementById('cover-preview-img');
+    if (url) { img.src = url; wrap.classList.remove('hidden'); }
+    else       { wrap.classList.add('hidden'); }
+}
+
+function previewCoverUrl(url) {
+    showCoverPreview(url);
+}
+
+async function handleCoverUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const statusEl  = document.getElementById('upload-status');
+    const labelEl   = document.getElementById('upload-label');
+
+    // Validação
+    if (file.size > 5 * 1024 * 1024) {
+        statusEl.textContent = '❌ Imagem muito grande. Máximo 5 MB.';
+        statusEl.classList.remove('hidden');
+        return;
+    }
+
+    labelEl.textContent = 'Enviando…';
+    statusEl.textContent = '';
+    statusEl.classList.add('hidden');
+
+    // Preview local imediato
+    const localUrl = URL.createObjectURL(file);
+    showCoverPreview(localUrl);
+
+    try {
+        // Upload para o Supabase Storage (bucket: covers)
+        const ext      = file.name.split('.').pop();
+        const fileName = `cover_${Date.now()}.${ext}`;
+        const { data, error } = await sb.storage
+            .from('covers')
+            .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+        if (error) throw error;
+
+        // Montar URL pública
+        const { data: urlData } = sb.storage.from('covers').getPublicUrl(fileName);
+        const publicUrl = urlData.publicUrl;
+
+        document.getElementById('cms-cover').value = publicUrl;
+        showCoverPreview(publicUrl);
+        labelEl.textContent = '✅ ' + file.name;
+        statusEl.textContent = 'Upload concluído!';
+        statusEl.classList.remove('hidden');
+    } catch (err) {
+        // Fallback: usar base64 inline se storage não estiver configurado
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            document.getElementById('cms-cover').value = e.target.result;
+            showCoverPreview(e.target.result);
+            labelEl.textContent = '✅ ' + file.name;
+            statusEl.textContent = 'Imagem carregada localmente.';
+            statusEl.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// ═══════════════════════════════════════════════════════
 // CMS CRUD
 // ═══════════════════════════════════════════════════════
 function slugify(text) {
@@ -1181,6 +1266,9 @@ function resetCmsForm() {
     document.getElementById('cms-form-title-label').textContent = 'Cadastrar Nova Resenha';
     document.getElementById('cms-save-label').textContent = 'Publicar Resenha';
     document.getElementById('cms-is-published').checked = true;
+    document.getElementById('upload-label').textContent = 'Enviar imagem do computador';
+    document.getElementById('upload-status').classList.add('hidden');
+    showCoverPreview('');
 }
 
 async function loadCmsBooks() {
@@ -1230,6 +1318,8 @@ async function editBook(bookId) {
     document.getElementById('cms-publisher').value = book.publisher || '';
     document.getElementById('cms-year').value = book.year || '';
     document.getElementById('cms-cover').value = book.cover_url || '';
+    showCoverPreview(book.cover_url || '');
+    document.getElementById('upload-label').textContent = book.cover_url ? '✅ Capa carregada' : 'Enviar imagem do computador';
     document.getElementById('cms-affiliate').value = book.affiliate_link || '';
     document.getElementById('cms-price-physical').value = book.price_physical || '';
     document.getElementById('cms-price-kindle').value = book.price_kindle || '';
