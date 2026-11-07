@@ -577,11 +577,20 @@
 
 <!-- MODAL LIVRO -->
 <div id="book-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden overflow-y-auto p-4 sm:p-6 flex justify-center items-start">
-    <div class="bg-brand-bg/95 border border-brand-border rounded-2xl max-w-4xl w-full my-8 p-6 sm:p-10 relative shadow-2xl space-y-8">
-        <button onclick="closeBookModal()" class="absolute top-4 right-4 bg-brand-bgSec hover:bg-brand-border p-2 rounded-full text-brand-text transition-colors">
-            <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-        <div id="book-modal-content"></div>
+    <div class="bg-brand-bg/95 border border-brand-border rounded-2xl max-w-4xl w-full my-8 shadow-2xl overflow-hidden">
+        <!-- Barra superior fixa (sempre visível, mesmo ao scrollar) -->
+        <div class="sticky top-0 z-10 flex items-center justify-between px-6 sm:px-10 py-4 bg-brand-bg/98 backdrop-blur-md border-b border-brand-border">
+            <span class="text-xs font-semibold text-brand-muted uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="book-open" class="w-3.5 h-3.5 text-brand-accent"></i> Resenha Completa
+            </span>
+            <button onclick="closeBookModal()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-bgSec hover:bg-brand-border border border-brand-border rounded-lg text-brand-text text-xs font-medium transition-colors">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i> Fechar
+            </button>
+        </div>
+        <!-- Conteúdo scrollável -->
+        <div class="p-6 sm:p-10 space-y-8">
+            <div id="book-modal-content"></div>
+        </div>
     </div>
 </div>
 
@@ -1234,41 +1243,49 @@ function slugify(text) {
 
 async function handleCMSSave(e) {
     e.preventDefault();
-    const btn = document.getElementById('cms-save-btn');
-    btn.disabled = true;
-    btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;"></div> Salvando...';
+    const btn      = document.getElementById('cms-save-btn');
+    const labelEl  = document.getElementById('cms-save-label');
+    const iconEl   = btn.querySelector('i[data-lucide="save"]');
 
-    const title = document.getElementById('cms-title').value.trim();
+    // Desabilitar botão e mostrar spinner sem destruir o DOM interno
+    btn.disabled = true;
+    if (iconEl) iconEl.style.display = 'none';
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner';
+    spinner.style.cssText = 'width:14px;height:14px;border-width:2px;';
+    spinner.id = 'save-spinner';
+    btn.insertBefore(spinner, btn.firstChild);
+    if (labelEl) labelEl.textContent = 'Salvando...';
+
+    const title  = document.getElementById('cms-title').value.trim();
     const editId = document.getElementById('cms-edit-id').value;
 
     const bookData = {
         title,
-        author: document.getElementById('cms-author').value.trim(),
-        genre: document.getElementById('cms-genre').value,
-        publisher: document.getElementById('cms-publisher').value.trim(),
-        year: parseInt(document.getElementById('cms-year').value) || null,
-        cover_url: document.getElementById('cms-cover').value.trim(),
-        affiliate_link: document.getElementById('cms-affiliate').value.trim(),
-        price_physical: document.getElementById('cms-price-physical').value.trim() || 'R$ 49,90',
-        price_kindle: document.getElementById('cms-price-kindle').value.trim() || 'R$ 24,90',
-        read_time: document.getElementById('cms-read-time').value.trim() || '6 min de leitura',
-        excerpt: document.getElementById('cms-excerpt').value.trim(),
-        review: document.getElementById('cms-review').value.trim(),
-        target_audience: document.getElementById('cms-audience').value.trim(),
-        is_featured: document.getElementById('cms-is-featured').checked,
-        is_published: document.getElementById('cms-is-published').checked,
-        spoiler_status: '🟢 Livre de Spoilers',
+        author:           document.getElementById('cms-author').value.trim(),
+        genre:            document.getElementById('cms-genre').value,
+        publisher:        document.getElementById('cms-publisher').value.trim(),
+        year:             parseInt(document.getElementById('cms-year').value) || null,
+        cover_url:        document.getElementById('cms-cover').value.trim(),
+        affiliate_link:   document.getElementById('cms-affiliate').value.trim(),
+        price_physical:   document.getElementById('cms-price-physical').value.trim() || 'R$ 49,90',
+        price_kindle:     document.getElementById('cms-price-kindle').value.trim() || 'R$ 24,90',
+        read_time:        document.getElementById('cms-read-time').value.trim() || '6 min de leitura',
+        excerpt:          document.getElementById('cms-excerpt').value.trim(),
+        review:           document.getElementById('cms-review').value.trim(),
+        target_audience:  document.getElementById('cms-audience').value.trim(),
+        is_featured:      false,
+        is_published:     document.getElementById('cms-is-published').checked,
+        spoiler_status:   '🟢 Livre de Spoilers',
     };
 
     let error;
 
     if (editId) {
-        // EDITAR
         const res = await sb.from('books').update(bookData).eq('id', editId);
         error = res.error;
         if (!error) showToast('✅ Resenha atualizada com sucesso!');
     } else {
-        // CRIAR
         bookData.slug = slugify(title);
         const res = await sb.from('books').insert(bookData);
         error = res.error;
@@ -1284,8 +1301,12 @@ async function handleCMSSave(e) {
         await renderHome();
     }
 
+    // Restaurar botão
     btn.disabled = false;
-    btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> <span id="cms-save-label">Publicar Resenha</span>';
+    const sp = document.getElementById('save-spinner');
+    if (sp) sp.remove();
+    if (iconEl) iconEl.style.display = '';
+    if (labelEl) labelEl.textContent = editId ? 'Salvar Alterações' : 'Publicar Resenha';
     if (window.lucide) lucide.createIcons();
 }
 
@@ -1445,12 +1466,21 @@ async function loadDestaquePanel() {
 
 async function setFeaturedBook(bookId, title) {
     showToast('Atualizando destaque…');
-    // Remover destaque de todos
-    const { error: e1 } = await sb.from('books').update({ is_featured: false }).neq('id', 'none');
-    if (e1) { showToast('❌ Erro ao atualizar.', 'error'); return; }
-    // Definir o novo destaque
+
+    // Passo 1: buscar todos os IDs que estão com is_featured = true
+    const { data: featuredNow, error: e0 } = await sb
+        .from('books').select('id').eq('is_featured', true);
+    if (e0) { showToast('❌ Erro ao atualizar.', 'error'); return; }
+
+    // Passo 2: remover destaque de cada um individualmente
+    for (const book of (featuredNow || [])) {
+        await sb.from('books').update({ is_featured: false }).eq('id', book.id);
+    }
+
+    // Passo 3: definir o novo destaque
     const { error: e2 } = await sb.from('books').update({ is_featured: true }).eq('id', bookId);
     if (e2) { showToast('❌ Erro ao definir destaque.', 'error'); return; }
+
     showToast(`⭐ "${title}" agora está em destaque!`);
     booksCache = [];
     await loadBooks();
