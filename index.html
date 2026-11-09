@@ -60,6 +60,14 @@
         .tab-page { display: none; }
         .tab-page.active { display: block; }
         #tab-inicio.active { display: block; }
+        /* ── Editor de resenha ── */
+        .prose-review h3 { font-family: 'Lora', serif; font-size: 1rem; font-weight: 700; color: #f2ebf5; margin: 1.4em 0 .4em; border-left: 3px solid #d16d82; padding-left: 10px; }
+        .prose-review p  { margin: 0 0 .9em; line-height: 1.75; color: #c0b2ca; }
+        .prose-review hr { border: none; border-top: 1px solid rgba(180,145,205,.2); margin: 1.2em 0; }
+        .prose-review b, .prose-review strong { color: #f2ebf5; font-weight: 600; }
+        .prose-review em, .prose-review i     { color: #bda6d6; }
+        #cms-review { resize: vertical; }
+        .editor-btn:focus { outline: 2px solid #d16d82; }
         .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #f2ebf5; background: rgba(22,14,28,0.97); border: 1px solid rgba(180,145,205,0.3); backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; pointer-events: none; }
         .toast.show { transform: translateY(0); opacity: 1; }
         .toast.success { border-color: rgba(52,211,153,0.4); }
@@ -489,8 +497,46 @@
                     <textarea id="cms-excerpt" rows="2" required placeholder="Breve descrição do livro para as listagens..." class="cms-input"></textarea>
                 </div>
                 <div>
-                    <label class="block font-semibold text-brand-text mb-1.5">Resenha Completa (HTML permitido)</label>
-                    <textarea id="cms-review" rows="8" placeholder="Escreva a resenha crítica completa. Pode usar HTML para formatar..." class="cms-input font-mono"></textarea>
+                    <label class="block font-semibold text-brand-text mb-1.5">Resenha Completa</label>
+                    <!-- BARRA DE FERRAMENTAS -->
+                    <div class="flex flex-wrap gap-1 p-2 bg-brand-bg border border-brand-border border-b-0 rounded-t-lg">
+                        <!-- Títulos de seção rápidos -->
+                        <span class="text-[10px] text-brand-muted self-center mr-1 font-semibold uppercase tracking-wider">Seções:</span>
+                        <button type="button" onclick="insertSection('Resumo')"     class="editor-btn px-2.5 py-1 text-[11px] font-bold bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors">Resumo</button>
+                        <button type="button" onclick="insertSection('Crítica')"    class="editor-btn px-2.5 py-1 text-[11px] font-bold bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors">Crítica</button>
+                        <button type="button" onclick="insertSection('Nota')"       class="editor-btn px-2.5 py-1 text-[11px] font-bold bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors">Nota</button>
+                        <button type="button" onclick="insertSection('Os Personagens')" class="editor-btn px-2.5 py-1 text-[11px] font-bold bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors">Os Personagens</button>
+                        <button type="button" onclick="insertSection('O Cenário')"  class="editor-btn px-2.5 py-1 text-[11px] font-bold bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors">O Cenário</button>
+                        <button type="button" onclick="insertSection('A Atração')"  class="editor-btn px-2.5 py-1 text-[11px] font-bold bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors">A Atração</button>
+
+                        <div class="w-px bg-brand-border mx-1"></div>
+
+                        <!-- Formatação inline -->
+                        <span class="text-[10px] text-brand-muted self-center mr-1 font-semibold uppercase tracking-wider">Texto:</span>
+                        <button type="button" onclick="wrapSelection('bold')"       class="editor-btn w-7 h-7 font-bold text-xs bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors" title="Negrito"><b>N</b></button>
+                        <button type="button" onclick="wrapSelection('italic')"     class="editor-btn w-7 h-7 italic text-xs bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors" title="Itálico"><i>I</i></button>
+                        <button type="button" onclick="wrapSelection('paragraph')"  class="editor-btn px-2.5 py-1 text-[11px] bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors" title="Novo parágrafo">¶ Parágrafo</button>
+                        <button type="button" onclick="wrapSelection('divider')"    class="editor-btn px-2.5 py-1 text-[11px] bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors" title="Divisor">— Divisor</button>
+
+                        <div class="w-px bg-brand-border mx-1"></div>
+
+                        <!-- Preview / Código -->
+                        <button type="button" onclick="toggleReviewMode()" id="toggle-preview-btn" class="editor-btn px-2.5 py-1 text-[11px] bg-brand-bgSec border border-brand-border rounded hover:border-brand-lilac hover:text-brand-lilac transition-colors flex items-center gap-1">
+                            <i data-lucide="eye" class="w-3 h-3"></i> Pré-visualizar
+                        </button>
+                    </div>
+
+                    <!-- EDITOR (textarea) -->
+                    <textarea id="cms-review" rows="12" placeholder="Escreva a resenha crítica completa..." class="cms-input font-mono rounded-t-none rounded-b-none border-t-0 border-b-0 text-xs leading-relaxed"></textarea>
+
+                    <!-- PREVIEW -->
+                    <div id="cms-review-preview" class="hidden border border-brand-border border-t-0 rounded-b-lg bg-brand-bg/60 p-4 min-h-32 prose-review text-sm leading-relaxed text-brand-text"></div>
+
+                    <!-- Rodapé do editor -->
+                    <div class="flex items-center justify-between px-3 py-1.5 bg-brand-bg border border-brand-border border-t-0 rounded-b-lg text-[10px] text-brand-muted">
+                        <span>Clique em <strong>Resumo / Crítica / Nota</strong> para inserir título de seção em negrito</span>
+                        <span id="review-char-count">0 caracteres</span>
+                    </div>
                 </div>
                 <div>
                     <label class="block font-semibold text-brand-text mb-1.5">Público-Alvo</label>
@@ -924,6 +970,39 @@ function listCardHtml(l) {
 }
 
 // ═══════════════════════════════════════════════════════
+// RENDER REVIEW — converte texto/HTML em HTML formatado
+// ═══════════════════════════════════════════════════════
+function renderReview(text) {
+    if (!text) return '<p class="text-brand-muted">Resenha em elaboração.</p>';
+
+    // Se já tem tags HTML, retorna direto
+    if (text.includes('<h3>') || text.includes('<p>') || text.includes('<strong>')) {
+        return text;
+    }
+
+    // Texto puro: converte automaticamente
+    // Detecta padrões "Palavra:" no início de linha como títulos de seção
+    const sectionKeywords = /^(Resumo|Crítica|Crítico|Crítica A|Nota|Os Personagens|O Cenário|A Atração|A Investigação|A Tragédia|O Desfecho|Pontos Fortes|Pontos Fracos|Conclusão)(\s*[:\-–]?)/im;
+
+    return text
+        // Quebras duplas → parágrafos
+        .split(/\n\n+/)
+        .map(block => {
+            const trimmed = block.trim();
+            if (!trimmed) return '';
+            // Detectar se bloco começa com palavra-chave de seção
+            const match = trimmed.match(/^([A-ZÀ-Ú][^\.]{0,30}?)\s*[:\-–]\s*/);
+            if (match && match[1].split(' ').length <= 4) {
+                const title = match[1].trim();
+                const body  = trimmed.slice(match[0].length).trim();
+                return `<h3>${title}</h3>${body ? `<p>${body.replace(/\n/g, ' ')}</p>` : ''}`;
+            }
+            return `<p>${trimmed.replace(/\n/g, ' ')}</p>`;
+        })
+        .join('');
+}
+
+// ═══════════════════════════════════════════════════════
 // BOOK DETAIL MODAL
 // ═══════════════════════════════════════════════════════
 async function viewBookDetail(bookId) {
@@ -970,7 +1049,7 @@ async function viewBookDetail(bookId) {
         </div>
 
         <!-- RESENHA -->
-        <div class="text-sm text-brand-text leading-relaxed font-sans">${book.review || '<p class="text-brand-muted">Resenha em elaboração.</p>'}</div>
+        <div class="prose-review text-sm leading-relaxed font-sans">${renderReview(book.review)}</div>
 
         <!-- VOTOS -->
         <div class="bg-brand-bgSec/40 p-4 rounded-xl border border-brand-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
@@ -1166,6 +1245,93 @@ function switchCmsTab(tab) {
 }
 
 // ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════
+// EDITOR DE RESENHA
+// ═══════════════════════════════════════════════════════
+let reviewMode = 'edit'; // 'edit' | 'preview'
+
+function getReviewTA() { return document.getElementById('cms-review'); }
+
+// Insere um título de seção em negrito na posição do cursor
+function insertSection(name) {
+    const ta = getReviewTA();
+    if (!ta) return;
+    ta.focus();
+    const start = ta.selectionStart;
+    const val   = ta.value;
+    // Adiciona quebra de linha antes se não estiver no início
+    const prefix = (start > 0 && val[start - 1] !== '\n') ? '\n\n' : '';
+    const insert = `${prefix}<h3>${name}</h3>\n`;
+    ta.value = val.slice(0, start) + insert + val.slice(ta.selectionEnd);
+    const pos = start + insert.length;
+    ta.selectionStart = ta.selectionEnd = pos;
+    updateCharCount();
+}
+
+// Envolve o texto selecionado com a formatação escolhida
+function wrapSelection(type) {
+    const ta = getReviewTA();
+    if (!ta) return;
+    ta.focus();
+    const start = ta.selectionStart;
+    const end   = ta.selectionEnd;
+    const sel   = ta.value.slice(start, end);
+    const val   = ta.value;
+    let insert  = '';
+
+    if (type === 'bold')      insert = `<strong>${sel || 'texto em negrito'}</strong>`;
+    if (type === 'italic')    insert = `<em>${sel || 'texto em itálico'}</em>`;
+    if (type === 'paragraph') insert = sel ? `<p>${sel}</p>` : '\n<p></p>\n';
+    if (type === 'divider')   insert = '\n<hr>\n';
+
+    ta.value = val.slice(0, start) + insert + val.slice(end);
+    ta.selectionStart = start + insert.length;
+    ta.selectionEnd   = start + insert.length;
+    updateCharCount();
+}
+
+function updateCharCount() {
+    const ta  = getReviewTA();
+    const el  = document.getElementById('review-char-count');
+    if (ta && el) el.textContent = ta.value.length.toLocaleString('pt-BR') + ' caracteres';
+}
+
+function toggleReviewMode() {
+    const ta      = getReviewTA();
+    const preview = document.getElementById('cms-review-preview');
+    const btn     = document.getElementById('toggle-preview-btn');
+    if (!ta || !preview || !btn) return;
+
+    reviewMode = reviewMode === 'edit' ? 'preview' : 'edit';
+
+    if (reviewMode === 'preview') {
+        // Converter texto simples em parágrafos se não houver HTML
+        let html = ta.value;
+        if (!html.includes('<')) {
+            html = html.split(/\n\n+/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+        }
+        preview.innerHTML = html;
+        preview.classList.remove('hidden');
+        ta.classList.add('hidden');
+        btn.innerHTML = '<i data-lucide="pencil" class="w-3 h-3"></i> Editar';
+    } else {
+        preview.classList.add('hidden');
+        ta.classList.remove('hidden');
+        btn.innerHTML = '<i data-lucide="eye" class="w-3 h-3"></i> Pré-visualizar';
+    }
+    if (window.lucide) lucide.createIcons();
+}
+
+// Atualizar contador ao digitar
+document.addEventListener('DOMContentLoaded', () => {
+    const ta = getReviewTA();
+    if (ta) {
+        ta.addEventListener('input', updateCharCount);
+        updateCharCount();
+    }
+});
+
+// ═══════════════════════════════════════════════════════
 // COVER UPLOAD & PREVIEW
 // ═══════════════════════════════════════════════════════
 function showCoverPreview(url) {
@@ -1319,6 +1485,8 @@ function resetCmsForm() {
     document.getElementById('upload-label').textContent = 'Enviar imagem do computador';
     document.getElementById('upload-status').classList.add('hidden');
     showCoverPreview('');
+    if (reviewMode === 'preview') toggleReviewMode();
+    updateCharCount();
 }
 
 async function loadCmsBooks() {
@@ -1376,6 +1544,9 @@ async function editBook(bookId) {
     document.getElementById('cms-read-time').value = book.read_time || '';
     document.getElementById('cms-excerpt').value = book.excerpt || '';
     document.getElementById('cms-review').value = book.review || '';
+    // Garantir que volta ao modo edição (não preview)
+    if (reviewMode === 'preview') toggleReviewMode();
+    updateCharCount();
     document.getElementById('cms-audience').value = book.target_audience || '';
     document.getElementById('cms-is-featured').checked = book.is_featured || false;
     document.getElementById('cms-is-published').checked = book.is_published !== false;
