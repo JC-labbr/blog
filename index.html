@@ -38,9 +38,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 
     <style>
+        /* ── Reset & Base ── */
+        *, *::before, *::after { box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
         body {
             background-image:
-                linear-gradient(rgba(10, 6, 12, 0.62), rgba(10, 6, 12, 0.70)),
+                linear-gradient(rgba(10,6,12,0.62), rgba(10,6,12,0.70)),
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23100b14'/%3E%3Cstop offset='50%25' stop-color='%2318101e'/%3E%3Cstop offset='100%25' stop-color='%230b070d'/%3E%3C/linearGradient%3E%3Cpattern id='shelf' width='240' height='160' patternUnits='userSpaceOnUse'%3E%3Crect width='240' height='160' fill='%23160e1b'/%3E%3Crect y='148' width='240' height='12' fill='%232a182b'/%3E%3Crect x='10' y='20' width='18' height='128' fill='%238b263e' rx='2'/%3E%3Crect x='30' y='35' width='16' height='113' fill='%233f2a52' rx='2'/%3E%3Crect x='48' y='15' width='22' height='133' fill='%23a26a9c' rx='2'/%3E%3Crect x='72' y='40' width='14' height='108' fill='%23233857' rx='2'/%3E%3Crect x='88' y='25' width='20' height='123' fill='%2348284c' rx='2'/%3E%3Crect x='110' y='10' width='25' height='138' fill='%237a1c32' rx='2'/%3E%3Crect x='137' y='30' width='15' height='118' fill='%23412a4c' rx='2'/%3E%3Crect x='154' y='20' width='18' height='128' fill='%23925785' rx='2'/%3E%3Crect x='174' y='45' width='22' height='103' fill='%23221926' rx='2'/%3E%3Crect x='198' y='15' width='16' height='133' fill='%236e2536' rx='2'/%3E%3Crect x='216' y='28' width='18' height='120' fill='%23332040' rx='2'/%3E%3C/pattern%3E%3CradialGradient id='candle' cx='20%25' cy='25%25' r='35%25'%3E%3Cstop offset='0%25' stop-color='%23d18ba2' stop-opacity='0.35'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='candle2' cx='75%25' cy='30%25' r='40%25'%3E%3Cstop offset='0%25' stop-color='%23b88bc0' stop-opacity='0.3'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23bg)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23shelf)' opacity='0.85'/%3E%3Crect width='100%25' height='100%25' fill='url(%23candle)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23candle2)'/%3E%3C/svg%3E");
             background-size: cover;
             background-position: center top;
@@ -49,17 +53,145 @@
             color: #f2ebf5;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            /* Suporte a safe area em dispositivos com notch */
+            padding-top: env(safe-area-inset-top, 0);
+            padding-left: env(safe-area-inset-left, 0);
+            padding-right: env(safe-area-inset-right, 0);
         }
+
+        /* iOS: evitar zoom em inputs */
+        input, textarea, select { font-size: 16px !important; }
+        @media (min-width: 640px) {
+            input, textarea, select { font-size: 13px !important; }
+        }
+
+        /* Background fixo não funciona bem no iOS — desativar em mobile */
+        @media (max-width: 768px) {
+            body { background-attachment: scroll; }
+        }
+
         .font-serif { font-family: 'Lora', Georgia, serif; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #110c14; }
         ::-webkit-scrollbar-thumb { background: #34223d; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #d16d82; }
+
+        /* ── Utilitários ── */
         .aspect-book { aspect-ratio: 2 / 3; }
         a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid #d16d82; outline-offset: 2px; }
         .tab-page { display: none; }
         .tab-page.active { display: block; }
         #tab-inicio.active { display: block; }
+
+        /* ── Announcement bar — oculto em telas muito pequenas ── */
+        @media (max-width: 479px) { #announcement-bar { display: none; } }
+
+        /* ── Header responsivo ── */
+        #main-header .logo-title { font-size: clamp(1.3rem, 5vw, 1.9rem); }
+        #main-header .logo-sub   { display: none; }
+        @media (min-width: 480px) { #main-header .logo-sub { display: block; } }
+
+        /* ── Mobile menu ── */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .35s ease;
+        }
+        #mobile-menu.open { max-height: 600px; }
+
+        /* ── Bottom nav (mobile) ── */
+        #bottom-nav {
+            display: flex;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 45;
+            background: rgba(10,6,12,0.97);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(180,145,205,0.15);
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+        @media (min-width: 768px) { #bottom-nav { display: none; } }
+        #bottom-nav button {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding: 8px 4px;
+            font-size: 10px;
+            font-weight: 500;
+            color: #c0b2ca;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: color .2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #bottom-nav button.active, #bottom-nav button:active { color: #d16d82; }
+        #bottom-nav button i { width: 20px; height: 20px; }
+
+        /* Padding inferior para não tapar conteúdo com bottom nav */
+        @media (max-width: 767px) {
+            main { padding-bottom: 70px; }
+        }
+
+        /* ── Cards de livro — touch friendly ── */
+        @media (max-width: 479px) {
+            .book-card-grid { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+        }
+
+        /* ── Featured book — mobile layout ── */
+        @media (max-width: 639px) {
+            #featured-book-section .featured-cover { width: 120px; margin: 0 auto; }
+            #featured-book-section .featured-prices { grid-template-columns: 1fr !important; }
+        }
+
+        /* ── Modal da resenha — full screen em mobile ── */
+        @media (max-width: 639px) {
+            #book-modal { padding: 0; align-items: flex-end; }
+            #book-modal > div {
+                border-radius: 20px 20px 0 0;
+                max-height: 92vh;
+                overflow-y: auto;
+                width: 100%;
+                margin: 0;
+            }
+        }
+
+        /* ── Modal de busca — full screen em mobile ── */
+        @media (max-width: 639px) {
+            #search-modal { padding: 0; align-items: flex-start; }
+            #search-modal > div {
+                border-radius: 0 0 20px 20px;
+                width: 100%;
+                max-width: 100%;
+                min-height: 50vh;
+            }
+        }
+
+        /* ── Admin CMS — tabs em mobile ── */
+        @media (max-width: 639px) {
+            .cms-tabs-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+            .cms-tabs-scroll::-webkit-scrollbar { height: 2px; }
+        }
+
+        /* ── Tabela de preços — stack em mobile ── */
+        @media (max-width: 479px) {
+            .price-grid { grid-template-columns: 1fr !important; }
+        }
+
+        /* ── Filtros de resenha — scroll horizontal em mobile ── */
+        .filter-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; white-space: nowrap; scrollbar-width: none; }
+        .filter-scroll::-webkit-scrollbar { display: none; }
+
+        /* ── Gêneros — 3 colunas em mobile ── */
+        @media (max-width: 479px) {
+            .genre-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        }
+
         /* ── Editor de resenha ── */
         .prose-review h3 { font-family: 'Lora', serif; font-size: 1rem; font-weight: 700; color: #f2ebf5; margin: 1.4em 0 .4em; border-left: 3px solid #d16d82; padding-left: 10px; }
         .prose-review p  { margin: 0 0 .9em; line-height: 1.75; color: #c0b2ca; }
@@ -68,15 +200,44 @@
         .prose-review em, .prose-review i     { color: #bda6d6; }
         #cms-review { resize: vertical; }
         .editor-btn:focus { outline: 2px solid #d16d82; }
-        .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #f2ebf5; background: rgba(22,14,28,0.97); border: 1px solid rgba(180,145,205,0.3); backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; pointer-events: none; }
+        @media (max-width: 639px) {
+            .editor-toolbar { flex-wrap: wrap; gap: 4px; }
+            .editor-toolbar .w-px { display: none; }
+        }
+
+        /* ── Toast ── */
+        .toast { position: fixed; bottom: 80px; right: 16px; z-index: 9999; padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; color: #f2ebf5; background: rgba(22,14,28,0.97); border: 1px solid rgba(180,145,205,0.3); backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; pointer-events: none; max-width: calc(100vw - 32px); }
+        @media (min-width: 768px) { .toast { bottom: 24px; right: 24px; font-size: 13px; padding: 12px 20px; } }
         .toast.show { transform: translateY(0); opacity: 1; }
         .toast.success { border-color: rgba(52,211,153,0.4); }
-        .toast.error { border-color: rgba(209,109,130,0.5); }
-        .spinner { width: 20px; height: 20px; border: 2px solid rgba(180,145,205,0.3); border-top-color: #d16d82; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+        .toast.error   { border-color: rgba(209,109,130,0.5); }
+
+        /* ── Spinner ── */
+        .spinner { width: 20px; height: 20px; border: 2px solid rgba(180,145,205,0.3); border-top-color: #d16d82; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; flex-shrink: 0; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .cms-input { width: 100%; padding: 8px 12px; background: rgba(10,6,12,0.8); border: 1px solid rgba(180,145,205,0.2); border-radius: 8px; color: #f2ebf5; font-size: 13px; transition: border-color 0.2s; }
+
+        /* ── CMS Inputs ── */
+        .cms-input { width: 100%; padding: 10px 12px; background: rgba(10,6,12,0.8); border: 1px solid rgba(180,145,205,0.2); border-radius: 8px; color: #f2ebf5; transition: border-color 0.2s; -webkit-appearance: none; }
         .cms-input:focus { outline: none; border-color: #d16d82; }
         .cms-input::placeholder { color: #c0b2ca; opacity: 0.6; }
+
+        /* ── Tap targets mínimos de 44px ── */
+        button, [role="button"] { min-height: 36px; }
+        @media (max-width: 767px) { button, [role="button"] { min-height: 44px; } }
+        #bottom-nav button { min-height: 52px; }
+
+        /* ── Texto legível em mobile ── */
+        @media (max-width: 639px) {
+            .text-xs  { font-size: 12px; }
+            .text-sm  { font-size: 13px; }
+            .leading-relaxed { line-height: 1.7; }
+        }
+
+        /* ── Imagens não transbordam ── */
+        img { max-width: 100%; height: auto; }
+
+        /* ── Tabelas dentro da resenha ── */
+        .prose-review table { width: 100%; overflow-x: auto; display: block; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased selection:bg-brand-accent selection:text-white">
@@ -85,77 +246,118 @@
 <div id="toast" class="toast"></div>
 
 <!-- TOP ANNOUNCEMENT BAR -->
-<div class="bg-brand-bgSec/70 backdrop-blur-md border-b border-brand-border text-xs text-brand-muted py-2 px-4 text-center flex items-center justify-center gap-2">
+<div id="announcement-bar" class="bg-brand-bgSec/70 backdrop-blur-md border-b border-brand-border text-xs text-brand-muted py-2 px-4 text-center flex items-center justify-center gap-2">
     <i data-lucide="info" class="w-3.5 h-3.5 shrink-0 text-brand-lilac"></i>
-    <span>O <strong>Entre Páginas</strong> é mantido por leitores. Ao comprar por nossos links, podemos receber comissão sem custo adicional para você.</span>
-    <button onclick="switchTab('politica-afiliados')" class="underline hover:text-brand-text transition-colors">Saiba mais</button>
+    <span class="hidden sm:inline">O <strong>Entre Páginas</strong> é mantido por leitores. Ao comprar por nossos links, podemos receber comissão sem custo adicional para você.</span>
+    <span class="sm:hidden">Blog independente — links afiliados sem custo extra.</span>
+    <button onclick="switchTab('politica-afiliados')" class="underline hover:text-brand-text transition-colors whitespace-nowrap">Saiba mais</button>
 </div>
 
 <!-- MAIN HEADER -->
-<header class="sticky top-0 z-40 bg-brand-bg/75 backdrop-blur-md border-b border-brand-border transition-all">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-        <a href="#" onclick="switchTab('inicio')" class="group flex flex-col">
-            <span class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-brand-text group-hover:text-brand-accent transition-colors">Entre Páginas</span>
-            <span class="text-[10px] tracking-widest uppercase text-brand-muted font-medium">Revista & CRÍTICA LITERÁRIA</span>
+<header id="main-header" class="sticky top-0 z-40 bg-brand-bg/90 backdrop-blur-md border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+
+        <!-- Logo -->
+        <a href="#" onclick="switchTab('inicio')" class="group flex flex-col shrink-0">
+            <span class="logo-title font-serif font-bold tracking-tight text-brand-text group-hover:text-brand-accent transition-colors">Entre Páginas</span>
+            <span class="logo-sub text-[10px] tracking-widest uppercase text-brand-muted font-medium">Revista & Crítica Literária</span>
         </a>
-        <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-brand-muted">
-            <button onclick="switchTab('inicio')" class="hover:text-brand-accent transition-colors py-1">Início</button>
+
+        <!-- Nav desktop -->
+        <nav class="hidden md:flex items-center gap-5 text-sm font-medium text-brand-muted flex-1 justify-center">
+            <button onclick="switchTab('inicio')"   class="hover:text-brand-accent transition-colors py-1">Início</button>
             <button onclick="switchTab('resenhas')" class="hover:text-brand-accent transition-colors py-1">Resenhas</button>
-            <button onclick="switchTab('livros')" class="hover:text-brand-accent transition-colors py-1">Livros</button>
-            <button onclick="switchTab('autores')" class="hover:text-brand-accent transition-colors py-1">Autores</button>
-            <button onclick="switchTab('listas')" class="hover:text-brand-accent transition-colors py-1">Listas de Leitura</button>
+            <button onclick="switchTab('livros')"   class="hover:text-brand-accent transition-colors py-1">Livros</button>
+            <button onclick="switchTab('autores')"  class="hover:text-brand-accent transition-colors py-1">Autores</button>
+            <button onclick="switchTab('listas')"   class="hover:text-brand-accent transition-colors py-1">Listas</button>
             <button onclick="switchTab('favoritos')" class="hover:text-brand-accent transition-colors py-1 flex items-center gap-1.5">
                 <i data-lucide="bookmark" class="w-4 h-4 text-brand-accent"></i>
-                <span>Minha Lista (<span id="nav-bookmarks-count">0</span>)</span>
+                <span>Lista (<span id="nav-bookmarks-count">0</span>)</span>
             </button>
-            <button onclick="switchTab('sobre')" class="hover:text-brand-accent transition-colors py-1">Sobre</button>
         </nav>
-        <div class="flex items-center gap-3">
-            <button onclick="openSearchModal()" class="p-2.5 rounded-full hover:bg-brand-bgSec text-brand-text transition-colors" aria-label="Abrir busca">
+
+        <!-- Ações direita -->
+        <div class="flex items-center gap-2 shrink-0">
+            <button onclick="openSearchModal()" class="p-2 rounded-full hover:bg-brand-bgSec text-brand-text transition-colors" aria-label="Buscar">
                 <i data-lucide="search" class="w-5 h-5"></i>
             </button>
             <button onclick="switchTab('admin')" id="admin-nav-btn" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border border-brand-border hover:bg-brand-bgSec text-brand-muted hover:text-brand-text transition-colors">
                 <i data-lucide="lock" class="w-3.5 h-3.5"></i>
                 <span id="admin-nav-label">Admin</span>
             </button>
-            <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-brand-text hover:bg-brand-bgSec transition-colors">
+            <!-- Hamburger — só aparece em tablet (md) pois mobile usa bottom nav -->
+            <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="hidden sm:flex md:hidden p-2 rounded-lg text-brand-text hover:bg-brand-bgSec transition-colors" aria-label="Menu">
                 <i data-lucide="menu" id="menu-icon-open" class="w-6 h-6"></i>
-                <i data-lucide="x" id="menu-icon-close" class="w-6 h-6 hidden"></i>
+                <i data-lucide="x"    id="menu-icon-close" class="w-6 h-6 hidden"></i>
             </button>
         </div>
     </div>
-    <div id="mobile-menu" class="hidden md:hidden border-b border-brand-border bg-brand-bg/95 backdrop-blur-lg px-4 pt-2 pb-6 space-y-3">
-        <button onclick="switchTab('inicio')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Início</button>
-        <button onclick="switchTab('resenhas')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Resenhas</button>
-        <button onclick="switchTab('livros')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Catálogo de Livros</button>
-        <button onclick="switchTab('autores')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Autores</button>
-        <button onclick="switchTab('listas')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Listas de Leitura</button>
-        <button onclick="switchTab('favoritos')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Minha Lista Salva</button>
-        <button onclick="switchTab('sobre')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md hover:bg-brand-bgSec">Sobre Nós</button>
-        <button onclick="switchTab('admin')" class="block w-full text-left py-2 px-3 text-base font-medium rounded-md bg-brand-bgSec text-brand-accent">
-            <i data-lucide="lock" class="w-4 h-4 inline mr-1"></i> Painel Admin
-        </button>
+
+    <!-- Menu tablet (sm → md) -->
+    <div id="mobile-menu" class="md:hidden border-b border-brand-border bg-brand-bg/98 backdrop-blur-lg px-4 pb-4 overflow-hidden" style="max-height:0;transition:max-height .35s ease">
+        <div class="pt-2 space-y-1">
+            <button onclick="switchTab('inicio')"    class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Início</button>
+            <button onclick="switchTab('resenhas')"  class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Resenhas</button>
+            <button onclick="switchTab('livros')"    class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Livros</button>
+            <button onclick="switchTab('autores')"   class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Autores</button>
+            <button onclick="switchTab('listas')"    class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Listas de Leitura</button>
+            <button onclick="switchTab('favoritos')" class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Minha Lista Salva</button>
+            <button onclick="switchTab('sobre')"     class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Sobre</button>
+            <button onclick="switchTab('admin')"     class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg bg-brand-bgSec text-brand-accent">
+                <i data-lucide="lock" class="w-4 h-4 inline mr-1"></i> Painel Admin
+            </button>
+        </div>
     </div>
 </header>
 
+<!-- BOTTOM NAV (mobile only — < 768px) -->
+<nav id="bottom-nav" aria-label="Navegação principal">
+    <button onclick="setBottomNav('inicio','Início')"    id="bn-inicio"    class="active">
+        <i data-lucide="home"       class="w-5 h-5"></i><span>Início</span>
+    </button>
+    <button onclick="setBottomNav('resenhas','Resenhas')" id="bn-resenhas">
+        <i data-lucide="book-open"  class="w-5 h-5"></i><span>Resenhas</span>
+    </button>
+    <button onclick="openSearchModal()"                   id="bn-search">
+        <i data-lucide="search"     class="w-5 h-5"></i><span>Buscar</span>
+    </button>
+    <button onclick="setBottomNav('favoritos','Lista')"   id="bn-favoritos">
+        <i data-lucide="bookmark"   class="w-5 h-5"></i><span>Lista (<span id="bn-bookmarks-count">0</span>)</span>
+    </button>
+    <button onclick="setBottomNav('admin','Admin')"       id="bn-admin">
+        <i data-lucide="lock"       class="w-5 h-5"></i><span>Admin</span>
+    </button>
+</nav>
+
 <!-- SEARCH MODAL -->
-<div id="search-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-start justify-center pt-16 px-4">
-    <div class="bg-brand-bg/95 backdrop-blur-xl rounded-xl border border-brand-border shadow-2xl max-w-2xl w-full p-6 relative flex flex-col gap-4">
-        <button onclick="closeSearchModal()" class="absolute top-4 right-4 text-brand-muted hover:text-brand-text p-1">
-            <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-        <h3 class="font-serif text-xl font-semibold text-brand-text">Buscar no Entre Páginas</h3>
+<div id="search-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-end sm:items-start justify-center sm:pt-16 sm:px-4">
+    <div class="bg-brand-bg/97 backdrop-blur-xl w-full sm:max-w-2xl sm:rounded-xl border border-brand-border shadow-2xl flex flex-col gap-4 p-5 sm:p-6"
+         style="border-radius:20px 20px 0 0; max-height:88vh;">
+        <!-- Handle mobile -->
+        <div class="sm:hidden flex justify-center -mt-1 mb-0">
+            <div class="w-10 h-1 rounded-full bg-brand-border"></div>
+        </div>
+        <div class="flex items-center justify-between">
+            <h3 class="font-serif text-lg sm:text-xl font-semibold text-brand-text">Buscar no Entre Páginas</h3>
+            <button onclick="closeSearchModal()" class="text-brand-muted hover:text-brand-text p-1 rounded-lg hover:bg-brand-bgSec">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
         <div class="relative">
             <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-3.5 text-brand-muted"></i>
-            <input type="text" id="global-search-input" oninput="handleGlobalSearch(this.value)" placeholder="Digite por título, autor, gênero..." class="w-full pl-11 pr-4 py-3 bg-brand-bgSec border border-brand-border rounded-lg text-sm text-brand-text placeholder-brand-muted focus:ring-1 focus:ring-brand-accent">
+            <input type="text" id="global-search-input" oninput="handleGlobalSearch(this.value)"
+                   placeholder="Título, autor, gênero..."
+                   class="w-full pl-11 pr-4 py-3 bg-brand-bgSec border border-brand-border rounded-lg text-sm text-brand-text placeholder-brand-muted focus:ring-1 focus:ring-brand-accent"
+                   autocomplete="off" autocorrect="off" spellcheck="false">
         </div>
-        <div class="flex flex-wrap gap-2 text-xs">
-            <span class="text-brand-muted py-1">Categorias populares:</span>
-            <button onclick="filterSearchCategory('Clássicos')" class="px-2.5 py-1 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Clássicos</button>
-            <button onclick="filterSearchCategory('Romance')" class="px-2.5 py-1 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Romance</button>
-            <button onclick="filterSearchCategory('Ficção Científica')" class="px-2.5 py-1 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Ficção Científica</button>
+        <div class="filter-scroll flex gap-2 text-xs pb-1">
+            <span class="text-brand-muted py-1 whitespace-nowrap self-center">Populares:</span>
+            <button onclick="filterSearchCategory('Clássicos')"       class="flex-shrink-0 px-2.5 py-1.5 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Clássicos</button>
+            <button onclick="filterSearchCategory('Romance')"         class="flex-shrink-0 px-2.5 py-1.5 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Romance</button>
+            <button onclick="filterSearchCategory('Ficção Científica')" class="flex-shrink-0 px-2.5 py-1.5 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Ficção Científica</button>
+            <button onclick="filterSearchCategory('Fantasia')"        class="flex-shrink-0 px-2.5 py-1.5 bg-brand-bgSec hover:bg-brand-border rounded-full transition-colors">Fantasia</button>
         </div>
-        <div id="search-results-container" class="max-h-80 overflow-y-auto space-y-3 pt-2 divide-y divide-brand-border">
+        <div id="search-results-container" class="overflow-y-auto overscroll-contain divide-y divide-brand-border" style="max-height:50vh">
             <p class="text-sm text-brand-muted text-center py-6">Digite ao menos 2 caracteres para pesquisar.</p>
         </div>
     </div>
@@ -205,7 +407,7 @@
                 Ver todas <i data-lucide="chevron-right" class="w-4 h-4"></i>
             </button>
         </div>
-        <div id="home-reviews-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div id="home-reviews-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             <div class="col-span-full flex justify-center py-10"><div class="spinner"></div></div>
         </div>
     </div>
@@ -214,7 +416,7 @@
     <div class="bg-brand-bgSec/30 backdrop-blur-lg border-y border-brand-border py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
             <h2 class="font-serif text-2xl font-bold text-center text-brand-text">Explore por Gênero Literário</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+            <div class="genre-grid grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
                 <button onclick="filterByGenre('Romance')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
                     <i data-lucide="heart" class="w-5 h-5 mx-auto mb-2 text-brand-accent group-hover:scale-110 transition-transform"></i>
                     <span class="text-xs font-semibold text-brand-text block">Romance</span>
@@ -276,18 +478,22 @@
         <h1 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text">Catálogo de Resenhas Críticas</h1>
         <p class="text-sm text-brand-muted">Explore análises profundas por gênero ou ordem cronológica.</p>
     </div>
-    <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center bg-brand-white/80 backdrop-blur-md p-4 rounded-xl border border-brand-border">
-        <div class="flex flex-wrap gap-2 items-center text-xs">
-            <span class="font-semibold text-brand-text mr-2">Filtrar por:</span>
-            <button onclick="filterResenhas('todos')" class="filter-btn active px-3 py-1.5 rounded-lg border border-brand-accent bg-brand-accent text-white">Todos</button>
-            <button onclick="filterResenhas('Romance')" class="filter-btn px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Romance</button>
-            <button onclick="filterResenhas('Clássicos')" class="filter-btn px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Clássicos</button>
-            <button onclick="filterResenhas('Ficção Científica')" class="filter-btn px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Ficção Científica</button>
-            <button onclick="filterResenhas('Filosofia')" class="filter-btn px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Filosofia</button>
+    <div class="bg-brand-white/80 backdrop-blur-md p-3 sm:p-4 rounded-xl border border-brand-border space-y-2">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-brand-text">Filtrar por:</span>
+            <span class="text-xs text-brand-muted">Exibindo <span id="resenhas-count">0</span> resenhas</span>
         </div>
-        <div class="text-xs text-brand-muted self-end md:self-auto">Exibindo <span id="resenhas-count">0</span> resenhas</div>
+        <div class="filter-scroll flex gap-2 text-xs pb-1">
+            <button onclick="filterResenhas('todos')"           class="filter-btn active flex-shrink-0 px-3 py-1.5 rounded-lg border border-brand-accent bg-brand-accent text-white">Todos</button>
+            <button onclick="filterResenhas('Romance')"         class="filter-btn flex-shrink-0 px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Romance</button>
+            <button onclick="filterResenhas('Clássicos')"       class="filter-btn flex-shrink-0 px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Clássicos</button>
+            <button onclick="filterResenhas('Ficção Científica')" class="filter-btn flex-shrink-0 px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Ficção Científica</button>
+            <button onclick="filterResenhas('Filosofia')"       class="filter-btn flex-shrink-0 px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Filosofia</button>
+            <button onclick="filterResenhas('Fantasia')"        class="filter-btn flex-shrink-0 px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Fantasia</button>
+            <button onclick="filterResenhas('Suspense')"        class="filter-btn flex-shrink-0 px-3 py-1.5 rounded-lg border border-brand-border bg-brand-bg text-brand-text hover:bg-brand-bgSec">Suspense</button>
+        </div>
     </div>
-    <div id="all-reviews-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+    <div id="all-reviews-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
         <div class="col-span-full flex justify-center py-10"><div class="spinner"></div></div>
     </div>
 </section>
@@ -298,7 +504,7 @@
         <h1 class="font-serif text-3xl sm:text-4xl font-bold text-brand-text">Acervo de Obras Analisadas</h1>
         <p class="text-sm text-brand-muted">Fichas bibliográficas completas, sinopses e links de aquisição recomendados.</p>
     </div>
-    <div id="all-books-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+    <div id="all-books-grid" class="book-card-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-5">
         <div class="col-span-full flex justify-center py-10"><div class="spinner"></div></div>
     </div>
 </section>
@@ -394,7 +600,7 @@
         </div>
 
         <!-- TABS CMS -->
-        <div class="flex gap-2 border-b border-brand-border pb-0 overflow-x-auto">
+        <div class="cms-tabs-scroll flex gap-0 border-b border-brand-border pb-0 overflow-x-auto -mx-1 px-1">
             <button onclick="switchCmsTab('novo')" id="cms-tab-novo" class="cms-tab-btn active px-4 py-2.5 text-xs font-semibold border-b-2 border-brand-accent text-brand-accent whitespace-nowrap">
                 <i data-lucide="plus-circle" class="w-3.5 h-3.5 inline mr-1"></i> Nova Postagem
             </button>
@@ -417,19 +623,19 @@
             </h2>
             <form id="cms-book-form" onsubmit="handleCMSSave(event)" class="space-y-5 text-xs sm:text-sm">
                 <input type="hidden" id="cms-edit-id">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-semibold text-brand-text mb-1.5">Título do Livro *</label>
+                        <label class="block font-semibold text-brand-text mb-1.5 text-xs">Título do Livro *</label>
                         <input type="text" id="cms-title" required placeholder="Ex: Dom Casmurro" class="cms-input">
                     </div>
                     <div>
-                        <label class="block font-semibold text-brand-text mb-1.5">Autor *</label>
+                        <label class="block font-semibold text-brand-text mb-1.5 text-xs">Autor *</label>
                         <input type="text" id="cms-author" required placeholder="Ex: Machado de Assis" class="cms-input">
                     </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label class="block font-semibold text-brand-text mb-1.5">Gênero Literário *</label>
+                        <label class="block font-semibold text-brand-text mb-1.5 text-xs">Gênero Literário *</label>
                         <select id="cms-genre" class="cms-input">
                             <option value="Romance">Romance</option>
                             <option value="Clássicos">Clássicos</option>
@@ -452,9 +658,9 @@
                         <input type="number" id="cms-year" placeholder="Ex: 2023" min="1000" max="2099" class="cms-input">
                     </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-semibold text-brand-text mb-1.5">Capa do Livro</label>
+                        <label class="block font-semibold text-brand-text mb-1.5 text-xs">Capa do Livro</label>
                         <div class="flex gap-2 items-start">
                             <!-- Preview -->
                             <div id="cover-preview-wrap" class="shrink-0 w-16 aspect-book rounded overflow-hidden border border-brand-border bg-brand-bgSec hidden">
@@ -478,17 +684,17 @@
                         <input type="url" id="cms-affiliate" placeholder="https://amazon.com.br/..." class="cms-input">
                     </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label class="block font-semibold text-brand-text mb-1.5">Preço Físico</label>
+                        <label class="block font-semibold text-brand-text mb-1.5 text-xs">Preço Físico</label>
                         <input type="text" id="cms-price-physical" placeholder="R$ 49,90" class="cms-input">
                     </div>
                     <div>
-                        <label class="block font-semibold text-brand-text mb-1.5">Preço Kindle/eBook</label>
+                        <label class="block font-semibold text-brand-text mb-1.5 text-xs">Preço Kindle/eBook</label>
                         <input type="text" id="cms-price-kindle" placeholder="R$ 24,90" class="cms-input">
                     </div>
                     <div>
-                        <label class="block font-semibold text-brand-text mb-1.5">Tempo de Leitura</label>
+                        <label class="block font-semibold text-brand-text mb-1.5 text-xs">Tempo de Leitura</label>
                         <input type="text" id="cms-read-time" placeholder="8 min de leitura" class="cms-input">
                     </div>
                 </div>
@@ -499,7 +705,7 @@
                 <div>
                     <label class="block font-semibold text-brand-text mb-1.5">Resenha Completa</label>
                     <!-- BARRA DE FERRAMENTAS -->
-                    <div class="flex flex-wrap gap-1 p-2 bg-brand-bg border border-brand-border border-b-0 rounded-t-lg">
+                    <div class="editor-toolbar flex flex-wrap gap-1 p-2 bg-brand-bg border border-brand-border border-b-0 rounded-t-lg overflow-x-auto">
                         <!-- Títulos de seção rápidos -->
                         <span class="text-[10px] text-brand-muted self-center mr-1 font-semibold uppercase tracking-wider">Seções:</span>
                         <button type="button" onclick="insertSection('Resumo')"     class="editor-btn px-2.5 py-1 text-[11px] font-bold bg-brand-bgSec border border-brand-border rounded hover:border-brand-accent hover:text-brand-accent transition-colors">Resumo</button>
@@ -622,19 +828,26 @@
 </section>
 
 <!-- MODAL LIVRO -->
-<div id="book-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden overflow-y-auto p-4 sm:p-6 flex justify-center items-start">
-    <div class="bg-brand-bg/95 border border-brand-border rounded-2xl max-w-4xl w-full my-8 shadow-2xl overflow-hidden">
-        <!-- Barra superior fixa (sempre visível, mesmo ao scrollar) -->
-        <div class="sticky top-0 z-10 flex items-center justify-between px-6 sm:px-10 py-4 bg-brand-bg/98 backdrop-blur-md border-b border-brand-border">
+<div id="book-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-end sm:items-start justify-center sm:pt-8 sm:px-4">
+    <div class="bg-brand-bg/97 border border-brand-border w-full sm:max-w-3xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+         style="max-height:92vh; border-radius: 20px 20px 0 0;">
+        <!-- Handle bar (mobile) -->
+        <div class="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
+            <div class="w-10 h-1 rounded-full bg-brand-border"></div>
+        </div>
+        <!-- Barra sticky -->
+        <div class="sticky top-0 z-10 flex items-center justify-between px-5 sm:px-8 py-3 bg-brand-bg/98 backdrop-blur-md border-b border-brand-border flex-shrink-0">
             <span class="text-xs font-semibold text-brand-muted uppercase tracking-wider flex items-center gap-1.5">
-                <i data-lucide="book-open" class="w-3.5 h-3.5 text-brand-accent"></i> Resenha Completa
+                <i data-lucide="book-open" class="w-3.5 h-3.5 text-brand-accent"></i>
+                <span class="hidden sm:inline">Resenha Completa</span>
+                <span class="sm:hidden">Resenha</span>
             </span>
             <button onclick="closeBookModal()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-bgSec hover:bg-brand-border border border-brand-border rounded-lg text-brand-text text-xs font-medium transition-colors">
                 <i data-lucide="x" class="w-3.5 h-3.5"></i> Fechar
             </button>
         </div>
         <!-- Conteúdo scrollável -->
-        <div class="p-6 sm:p-10 space-y-8">
+        <div class="overflow-y-auto overscroll-contain -webkit-overflow-scrolling-touch p-5 sm:p-8 space-y-6">
             <div id="book-modal-content"></div>
         </div>
     </div>
@@ -660,9 +873,17 @@
 
 </main>
 
-<footer class="bg-brand-bgSec/95 backdrop-blur-md border-t border-brand-border text-brand-text py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 text-center text-xs text-brand-muted">
-        <p>© 2026 Entre Páginas Periódico Cultural. Todos os direitos reservados.</p>
+<footer class="bg-brand-bgSec/95 backdrop-blur-md border-t border-brand-border text-brand-text py-10 pb-24 md:pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 text-center">
+        <p class="font-serif text-lg font-semibold text-brand-text">Entre Páginas</p>
+        <p class="text-xs text-brand-muted">Revista & Crítica Literária Independente</p>
+        <div class="flex flex-wrap justify-center gap-4 text-xs text-brand-muted pt-2">
+            <button onclick="switchTab('inicio')"            class="hover:text-brand-accent transition-colors">Início</button>
+            <button onclick="switchTab('resenhas')"          class="hover:text-brand-accent transition-colors">Resenhas</button>
+            <button onclick="switchTab('sobre')"             class="hover:text-brand-accent transition-colors">Sobre</button>
+            <button onclick="switchTab('politica-afiliados')" class="hover:text-brand-accent transition-colors">Política de Afiliados</button>
+        </div>
+        <p class="text-[11px] text-brand-muted pt-2">© 2026 Entre Páginas Periódico Cultural. Todos os direitos reservados.</p>
     </div>
 </footer>
 
@@ -706,35 +927,57 @@ function showToast(msg, type = 'success') {
 // NAVIGATION
 // ═══════════════════════════════════════════════════════
 function switchTab(tabId) {
-    document.querySelectorAll('.tab-page').forEach(p => { p.classList.remove('active'); });
+    document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
     const target = document.getElementById('tab-' + tabId);
     if (target) {
         target.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     closeMobileMenu();
+    // Atualizar bottom nav
+    document.querySelectorAll('#bottom-nav button').forEach(b => b.classList.remove('active'));
+    const bnBtn = document.getElementById('bn-' + tabId);
+    if (bnBtn) bnBtn.classList.add('active');
     if (tabId === 'favoritos') renderBookmarksPage();
-    if (tabId === 'resenhas') renderResenhas();
-    if (tabId === 'livros') renderLivros();
-    if (tabId === 'autores') renderAutores();
-    if (tabId === 'listas') renderListas();
-    if (tabId === 'admin') checkAdminState();
+    if (tabId === 'resenhas')  renderResenhas();
+    if (tabId === 'livros')    renderLivros();
+    if (tabId === 'autores')   renderAutores();
+    if (tabId === 'listas')    renderListas();
+    if (tabId === 'admin')     checkAdminState();
     if (window.lucide) lucide.createIcons();
 }
 
+function setBottomNav(tabId) {
+    switchTab(tabId);
+}
+
 function toggleMobileMenu() {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
+    const menu   = document.getElementById('mobile-menu');
+    const open   = document.getElementById('menu-icon-open');
+    const close  = document.getElementById('menu-icon-close');
+    const isOpen = menu.style.maxHeight && menu.style.maxHeight !== '0px';
+    menu.style.maxHeight = isOpen ? '0px' : '600px';
+    if (open)  open.classList.toggle('hidden', !isOpen);
+    if (close) close.classList.toggle('hidden', isOpen);
 }
 function closeMobileMenu() {
-    document.getElementById('mobile-menu').classList.add('hidden');
+    const menu  = document.getElementById('mobile-menu');
+    const open  = document.getElementById('menu-icon-open');
+    const close = document.getElementById('menu-icon-close');
+    if (menu)  menu.style.maxHeight = '0px';
+    if (open)  open.classList.remove('hidden');
+    if (close) close.classList.add('hidden');
 }
 
 // ═══════════════════════════════════════════════════════
 // BOOKMARKS
 // ═══════════════════════════════════════════════════════
 function updateBookmarkBadge() {
-    const el = document.getElementById('nav-bookmarks-count');
-    if (el) el.textContent = savedBookmarks.length;
+    const n = savedBookmarks.length;
+    const el  = document.getElementById('nav-bookmarks-count');
+    const el2 = document.getElementById('bn-bookmarks-count');
+    if (el)  el.textContent  = n;
+    if (el2) el2.textContent = n;
 }
 
 function toggleBookmark(bookId) {
@@ -852,50 +1095,64 @@ async function renderHome() {
     const featured = books.find(b => b.is_featured) || books[0];
     if (featured) {
         document.getElementById('featured-book-section').innerHTML = `
-        <div class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-2xl p-6 sm:p-10 shadow-2xl grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-            <div class="md:col-span-4 flex flex-col items-center gap-3">
-                <div class="relative group cursor-pointer w-48 sm:w-56" onclick="viewBookDetail('${featured.id}')">
-                    <img src="${featured.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" alt="${featured.title}" class="w-full aspect-book object-cover rounded-lg shadow-md group-hover:shadow-xl transition-all duration-300">
-                    <span class="absolute top-3 left-3 bg-brand-accent text-white text-[11px] font-semibold px-2.5 py-1 rounded shadow">Escolha do Editor</span>
-                </div>
-                <button onclick="toggleBookmark('${featured.id}')" class="text-xs text-brand-muted hover:text-brand-accent flex items-center gap-1.5 transition-colors">
-                    <i data-lucide="bookmark" data-bm-id="${featured.id}" class="w-4 h-4 ${savedBookmarks.includes(featured.id) ? 'text-brand-accent fill-current' : ''}"></i>
-                    <span>Salvar na minha lista</span>
-                </button>
-            </div>
-            <div class="md:col-span-8 space-y-4">
-                <div class="flex flex-wrap items-center gap-3 text-xs text-brand-muted">
-                    <span class="font-medium text-brand-lilac uppercase tracking-wider">${featured.genre}</span>
-                    <span>•</span>
-                    <span class="inline-flex items-center gap-1 text-emerald-400 bg-emerald-950/40 border border-emerald-800/40 px-2 py-0.5 rounded">
-                        <i data-lucide="shield-check" class="w-3 h-3"></i> ${featured.spoiler_status || '🟢 Livre de Spoilers'}
-                    </span>
-                    <span>•</span>
-                    <span class="inline-flex items-center gap-1 text-brand-lilac">
-                        <i data-lucide="clock" class="w-3 h-3"></i> ${featured.read_time || '8 min de leitura'}
-                    </span>
-                </div>
-                <h2 class="font-serif text-2xl sm:text-4xl font-bold text-brand-text hover:text-brand-lilac transition-colors cursor-pointer" onclick="viewBookDetail('${featured.id}')">
-                    ${featured.title} — ${featured.author}
-                </h2>
-                <p class="text-brand-muted text-sm sm:text-base leading-relaxed" style="display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden">${featured.excerpt || ''}</p>
-                <div class="bg-brand-bgSec/60 rounded-xl p-4 border border-brand-border space-y-3">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                        <div class="bg-brand-white/40 p-2.5 rounded-lg border border-brand-border/60 flex items-center justify-between">
-                            <div><div class="font-medium text-brand-text">Livro Físico</div><div class="text-[11px] text-brand-muted">Amazon Brasil</div></div>
-                            <div class="text-right"><span class="font-bold text-emerald-400">${featured.price_physical || 'R$ 49,90'}</span><button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')" class="block text-[10px] text-brand-accent hover:underline">Ver na Loja</button></div>
-                        </div>
-                        <div class="bg-brand-white/40 p-2.5 rounded-lg border border-brand-border/60 flex items-center justify-between">
-                            <div><div class="font-medium text-brand-text">eBook / Kindle</div><div class="text-[11px] text-brand-muted">Kindle Unlimited</div></div>
-                            <div class="text-right"><span class="font-bold text-emerald-400">${featured.price_kindle || 'R$ 24,90'}</span><button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')" class="block text-[10px] text-brand-accent hover:underline">Ver Kindle</button></div>
-                        </div>
+        <div class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Mobile: stack vertical | Desktop: side by side -->
+            <div class="flex flex-col sm:flex-row gap-0">
+
+                <!-- Capa -->
+                <div class="relative flex-shrink-0 flex justify-center items-start bg-brand-bgSec/40 p-5 sm:p-8 sm:w-56 md:w-64">
+                    <div class="relative cursor-pointer w-32 sm:w-full" onclick="viewBookDetail('${featured.id}')">
+                        <img src="${featured.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" alt="${featured.title}" class="w-full aspect-book object-cover rounded-lg shadow-lg">
+                        <span class="absolute top-2 left-2 bg-brand-accent text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">Escolha do Editor</span>
                     </div>
                 </div>
-                <div class="pt-2">
-                    <button onclick="viewBookDetail('${featured.id}')" class="px-5 py-2.5 bg-brand-accent hover:bg-brand-accentHover text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 shadow-lg">
-                        <span>Ler Análise Completa</span>
-                        <i data-lucide="book-open" class="w-4 h-4"></i>
-                    </button>
+
+                <!-- Conteúdo -->
+                <div class="flex-1 p-5 sm:p-7 space-y-3 sm:space-y-4">
+                    <!-- Meta -->
+                    <div class="flex flex-wrap items-center gap-2 text-[11px] text-brand-muted">
+                        <span class="font-bold text-brand-lilac uppercase tracking-wider">${featured.genre}</span>
+                        <span class="text-brand-border">•</span>
+                        <span class="inline-flex items-center gap-1 text-emerald-400">
+                            <i data-lucide="shield-check" class="w-3 h-3"></i> ${featured.spoiler_status || '🟢 Livre de Spoilers'}
+                        </span>
+                        <span class="text-brand-border">•</span>
+                        <span class="inline-flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3 h-3"></i> ${featured.read_time || '8 min'}
+                        </span>
+                    </div>
+
+                    <!-- Título -->
+                    <h2 class="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-brand-text leading-snug cursor-pointer hover:text-brand-lilac transition-colors" onclick="viewBookDetail('${featured.id}')">
+                        ${featured.title} <span class="text-brand-muted font-normal">— ${featured.author}</span>
+                    </h2>
+
+                    <!-- Excerpt 5 linhas -->
+                    <p class="text-brand-muted text-sm leading-relaxed" style="display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden">${featured.excerpt || ''}</p>
+
+                    <!-- Preços -->
+                    <div class="grid grid-cols-2 gap-2 text-xs pt-1">
+                        <div class="bg-brand-bg/60 p-2.5 rounded-lg border border-brand-border flex flex-col gap-0.5">
+                            <span class="font-medium text-brand-text text-[11px]">Livro Físico</span>
+                            <span class="font-bold text-emerald-400">${featured.price_physical || 'R$ 49,90'}</span>
+                            <button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')" class="text-[10px] text-brand-accent hover:underline text-left">Ver na Amazon →</button>
+                        </div>
+                        <div class="bg-brand-bg/60 p-2.5 rounded-lg border border-brand-border flex flex-col gap-0.5">
+                            <span class="font-medium text-brand-text text-[11px]">eBook / Kindle</span>
+                            <span class="font-bold text-emerald-400">${featured.price_kindle || 'R$ 24,90'}</span>
+                            <button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')" class="text-[10px] text-brand-accent hover:underline text-left">Ver no Kindle →</button>
+                        </div>
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="flex flex-wrap items-center gap-3 pt-1">
+                        <button onclick="viewBookDetail('${featured.id}')" class="flex-1 sm:flex-none px-5 py-2.5 bg-brand-accent hover:bg-brand-accentHover text-white text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 shadow">
+                            <i data-lucide="book-open" class="w-4 h-4"></i> Ler Análise Completa
+                        </button>
+                        <button onclick="toggleBookmark('${featured.id}')" class="p-2.5 rounded-lg border border-brand-border hover:border-brand-accent text-brand-muted hover:text-brand-accent transition-colors">
+                            <i data-lucide="bookmark" data-bm-id="${featured.id}" class="w-4 h-4 ${savedBookmarks.includes(featured.id) ? 'text-brand-accent fill-current' : ''}"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>`;
