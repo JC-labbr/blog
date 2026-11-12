@@ -89,9 +89,8 @@
         @media (max-width: 479px) { #announcement-bar { display: none; } }
 
         /* ── Header responsivo ── */
-        #main-header .logo-title { font-size: clamp(1.3rem, 5vw, 1.9rem); }
-        #main-header .logo-sub   { display: none; }
-        @media (min-width: 480px) { #main-header .logo-sub { display: block; } }
+        #main-header .logo-title { font-size: clamp(1.2rem, 4.5vw, 1.9rem); }
+        #main-header .logo-sub   { display: block; font-size: 9px; letter-spacing: .12em; }
 
         /* ── Mobile menu ── */
         #mobile-menu {
@@ -131,7 +130,8 @@
             -webkit-tap-highlight-color: transparent;
         }
         #bottom-nav button.active, #bottom-nav button:active { color: #d16d82; }
-        #bottom-nav button i { width: 20px; height: 20px; }
+        #bottom-nav button i { width: 22px; height: 22px; display: block; stroke-width: 1.8; }
+        #bottom-nav button svg { width: 22px; height: 22px; }
 
         /* Padding inferior para não tapar conteúdo com bottom nav */
         @media (max-width: 767px) {
@@ -312,20 +312,25 @@
 
 <!-- BOTTOM NAV (mobile only — < 768px) -->
 <nav id="bottom-nav" aria-label="Navegação principal">
-    <button onclick="setBottomNav('inicio','Início')"    id="bn-inicio"    class="active">
-        <i data-lucide="home"       class="w-5 h-5"></i><span>Início</span>
+    <button onclick="setBottomNav('inicio')"    id="bn-inicio"    class="active">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Início</span>
     </button>
-    <button onclick="setBottomNav('resenhas','Resenhas')" id="bn-resenhas">
-        <i data-lucide="book-open"  class="w-5 h-5"></i><span>Resenhas</span>
+    <button onclick="setBottomNav('resenhas')"  id="bn-resenhas">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span>Resenhas</span>
     </button>
-    <button onclick="openSearchModal()"                   id="bn-search">
-        <i data-lucide="search"     class="w-5 h-5"></i><span>Buscar</span>
+    <button onclick="openSearchModal()"         id="bn-search">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <span>Buscar</span>
     </button>
-    <button onclick="setBottomNav('favoritos','Lista')"   id="bn-favoritos">
-        <i data-lucide="bookmark"   class="w-5 h-5"></i><span>Lista (<span id="bn-bookmarks-count">0</span>)</span>
+    <button onclick="setBottomNav('favoritos')" id="bn-favoritos">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+        <span>Lista (<span id="bn-bookmarks-count">0</span>)</span>
     </button>
-    <button onclick="setBottomNav('admin','Admin')"       id="bn-admin">
-        <i data-lucide="lock"       class="w-5 h-5"></i><span>Admin</span>
+    <button onclick="setBottomNav('admin')"     id="bn-admin">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Admin</span>
     </button>
 </nav>
 
@@ -366,24 +371,24 @@
 <main id="app-content" class="flex-grow">
 
 <!-- ===================== INÍCIO ===================== -->
-<section id="tab-inicio" class="tab-page active space-y-16 py-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl space-y-6">
+<section id="tab-inicio" class="tab-page active space-y-10 sm:space-y-16 py-6 sm:py-10">
+    <div class="w-full max-w-3xl mx-auto px-5 sm:px-6 lg:px-8 text-center space-y-5">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-bgSec/80 backdrop-blur-md border border-brand-border text-xs font-medium text-brand-accent">
             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
             <span>Crítica Literária Independente</span>
         </div>
-        <h1 class="font-serif text-3xl sm:text-5xl font-bold tracking-tight text-brand-text leading-tight sm:leading-tight">
+        <h1 class="font-serif text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-brand-text leading-tight">
             Seu próximo livro favorito começa aqui.
         </h1>
-        <p class="text-base sm:text-lg text-brand-muted font-normal leading-relaxed">
+        <p class="text-sm sm:text-base md:text-lg text-brand-muted font-normal leading-relaxed">
             Resenhas honestas, descobertas literárias e histórias que continuam com você depois da última página.
         </p>
-        <div class="pt-2 flex flex-col sm:flex-row justify-center gap-3">
-            <button onclick="switchTab('resenhas')" class="px-6 py-3 bg-brand-accent hover:bg-brand-accentHover text-white rounded-lg font-medium text-sm transition-all shadow-sm flex items-center justify-center gap-2">
-                <span>Explorar Resenhas Críticas</span>
+        <div class="pt-2 flex flex-col xs:flex-row justify-center gap-3 px-4 sm:px-0">
+            <button onclick="switchTab('resenhas')" class="px-5 py-3 bg-brand-accent hover:bg-brand-accentHover text-white rounded-xl font-semibold text-sm transition-all shadow-md flex items-center justify-center gap-2">
+                <span>Explorar Resenhas</span>
                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
-            <button onclick="switchTab('listas')" class="px-6 py-3 bg-brand-bgSec/90 backdrop-blur-md hover:bg-brand-border text-brand-text rounded-lg font-medium text-sm transition-all flex items-center justify-center">
+            <button onclick="switchTab('listas')" class="px-5 py-3 bg-brand-bgSec/90 backdrop-blur-md hover:bg-brand-border text-brand-text rounded-xl font-semibold text-sm transition-all flex items-center justify-center border border-brand-border">
                 Ver Guias de Leitura
             </button>
         </div>
@@ -417,29 +422,29 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
             <h2 class="font-serif text-2xl font-bold text-center text-brand-text">Explore por Gênero Literário</h2>
             <div class="genre-grid grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
-                <button onclick="filterByGenre('Romance')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
-                    <i data-lucide="heart" class="w-5 h-5 mx-auto mb-2 text-brand-accent group-hover:scale-110 transition-transform"></i>
-                    <span class="text-xs font-semibold text-brand-text block">Romance</span>
+                <button onclick="filterByGenre('Romance')" class="py-3 px-2 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center active:border-brand-lilac active:bg-brand-white/50 transition-all group">
+                    <i data-lucide="heart" class="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1 sm:mb-2 text-brand-accent"></i>
+                    <span class="text-[10px] sm:text-xs font-semibold text-brand-text block leading-tight">Romance</span>
                 </button>
-                <button onclick="filterByGenre('Clássicos')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
-                    <i data-lucide="landmark" class="w-5 h-5 mx-auto mb-2 text-brand-lilac group-hover:scale-110 transition-transform"></i>
-                    <span class="text-xs font-semibold text-brand-text block">Clássicos</span>
+                <button onclick="filterByGenre('Clássicos')" class="py-3 px-2 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center active:border-brand-lilac active:bg-brand-white/50 transition-all group">
+                    <i data-lucide="landmark" class="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1 sm:mb-2 text-brand-lilac"></i>
+                    <span class="text-[10px] sm:text-xs font-semibold text-brand-text block leading-tight">Clássicos</span>
                 </button>
-                <button onclick="filterByGenre('Ficção Científica')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
-                    <i data-lucide="rocket" class="w-5 h-5 mx-auto mb-2 text-brand-accent group-hover:scale-110 transition-transform"></i>
-                    <span class="text-xs font-semibold text-brand-text block">Ficção Científica</span>
+                <button onclick="filterByGenre('Ficção Científica')" class="py-3 px-2 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center active:border-brand-lilac active:bg-brand-white/50 transition-all group">
+                    <i data-lucide="rocket" class="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1 sm:mb-2 text-brand-accent"></i>
+                    <span class="text-[10px] sm:text-xs font-semibold text-brand-text block leading-tight">Ficção Cient.</span>
                 </button>
-                <button onclick="filterByGenre('Suspense')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
-                    <i data-lucide="eye" class="w-5 h-5 mx-auto mb-2 text-brand-lilac group-hover:scale-110 transition-transform"></i>
-                    <span class="text-xs font-semibold text-brand-text block">Suspense</span>
+                <button onclick="filterByGenre('Suspense')" class="py-3 px-2 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center active:border-brand-lilac active:bg-brand-white/50 transition-all group">
+                    <i data-lucide="eye" class="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1 sm:mb-2 text-brand-lilac"></i>
+                    <span class="text-[10px] sm:text-xs font-semibold text-brand-text block leading-tight">Suspense</span>
                 </button>
-                <button onclick="filterByGenre('Filosofia')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
-                    <i data-lucide="brain" class="w-5 h-5 mx-auto mb-2 text-brand-accent group-hover:scale-110 transition-transform"></i>
-                    <span class="text-xs font-semibold text-brand-text block">Filosofia</span>
+                <button onclick="filterByGenre('Filosofia')" class="py-3 px-2 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center active:border-brand-lilac active:bg-brand-white/50 transition-all group">
+                    <i data-lucide="brain" class="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1 sm:mb-2 text-brand-accent"></i>
+                    <span class="text-[10px] sm:text-xs font-semibold text-brand-text block leading-tight">Filosofia</span>
                 </button>
-                <button onclick="filterByGenre('Poesia')" class="p-4 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center hover:border-brand-lilac hover:bg-brand-white/50 transition-all group">
-                    <i data-lucide="feather" class="w-5 h-5 mx-auto mb-2 text-brand-lilac group-hover:scale-110 transition-transform"></i>
-                    <span class="text-xs font-semibold text-brand-text block">Poesia</span>
+                <button onclick="filterByGenre('Poesia')" class="py-3 px-2 bg-brand-white/30 backdrop-blur-md border border-brand-border rounded-xl text-center active:border-brand-lilac active:bg-brand-white/50 transition-all group">
+                    <i data-lucide="feather" class="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1 sm:mb-2 text-brand-lilac"></i>
+                    <span class="text-[10px] sm:text-xs font-semibold text-brand-text block leading-tight">Poesia</span>
                 </button>
             </div>
         </div>
@@ -949,6 +954,7 @@ function switchTab(tabId) {
 
 function setBottomNav(tabId) {
     switchTab(tabId);
+    // Forçar ícones SVG inline já estão no HTML — não precisa do lucide aqui
 }
 
 function toggleMobileMenu() {
@@ -1064,24 +1070,35 @@ async function loadLists() {
 function bookCardHtml(book) {
     const isSaved = savedBookmarks.includes(book.id);
     return `
-    <article class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-xl overflow-hidden flex flex-col justify-between p-4 space-y-3 relative group">
-        <div class="relative cursor-pointer" onclick="viewBookDetail('${book.id}')">
-            <img src="${book.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" alt="${book.title}" class="w-full aspect-book object-cover rounded shadow-md">
-            ${book.is_featured ? '<span class="absolute top-2 left-2 bg-brand-accent text-white text-[10px] font-bold px-2 py-0.5 rounded">Destaque</span>' : ''}
-            <button onclick="event.stopPropagation(); toggleBookmark('${book.id}')" class="absolute top-2 right-2 p-1.5 bg-brand-bg/80 backdrop-blur-md rounded-full text-brand-text hover:text-brand-accent transition-colors">
-                <i data-lucide="bookmark" data-bm-id="${book.id}" class="w-4 h-4 ${isSaved ? 'text-brand-accent fill-current' : ''}"></i>
+    <article class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-xl overflow-hidden flex flex-col justify-between relative group" style="min-width:0">
+        <!-- Capa -->
+        <div class="relative cursor-pointer flex-shrink-0" onclick="viewBookDetail('${book.id}')">
+            <img src="${book.cover_url || ''}"
+                 onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'"
+                 alt="${book.title}"
+                 class="w-full aspect-book object-cover"
+                 loading="lazy">
+            ${book.is_featured ? '<span class="absolute top-2 left-2 bg-brand-accent text-white text-[9px] font-bold px-1.5 py-0.5 rounded">Destaque</span>' : ''}
+            <button onclick="event.stopPropagation(); toggleBookmark('${book.id}')"
+                    class="absolute top-1.5 right-1.5 w-7 h-7 flex items-center justify-center bg-brand-bg/85 backdrop-blur-sm rounded-full text-brand-text active:text-brand-accent transition-colors"
+                    aria-label="Salvar">
+                <i data-lucide="bookmark" data-bm-id="${book.id}" class="w-3.5 h-3.5 ${isSaved ? 'text-brand-accent fill-current' : ''}"></i>
             </button>
         </div>
-        <div class="space-y-2">
-            <div class="flex items-center justify-between text-[10px] text-brand-muted">
-                <span class="font-bold text-brand-lilac uppercase">${book.genre}</span>
-                <span>${book.read_time || '6 min'}</span>
-            </div>
-            <h3 class="font-serif text-base font-bold text-brand-text cursor-pointer hover:text-brand-lilac" onclick="viewBookDetail('${book.id}')">${book.title}</h3>
-            <p class="text-xs text-brand-muted">${book.author}</p>
-            <p class="text-xs text-brand-muted" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5">${book.excerpt || ''}</p>
+        <!-- Info -->
+        <div class="p-2.5 sm:p-3 flex flex-col gap-1.5 flex-1">
+            <span class="text-[9px] sm:text-[10px] font-bold text-brand-lilac uppercase tracking-wide leading-none">${book.genre}</span>
+            <h3 class="font-serif text-xs sm:text-sm font-bold text-brand-text cursor-pointer leading-snug line-clamp-2"
+                onclick="viewBookDetail('${book.id}')">${book.title}</h3>
+            <p class="text-[10px] sm:text-xs text-brand-muted leading-none">${book.author}</p>
+            <p class="text-[10px] sm:text-xs text-brand-muted hidden sm:block"
+               style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4">${book.excerpt || ''}</p>
         </div>
-        <button onclick="viewBookDetail('${book.id}')" class="py-2 bg-brand-accent text-white text-xs font-semibold rounded-md hover:bg-brand-accentHover transition-colors">Ler resenha</button>
+        <!-- CTA -->
+        <button onclick="viewBookDetail('${book.id}')"
+                class="mx-2.5 mb-2.5 py-2 bg-brand-accent text-white text-[11px] sm:text-xs font-semibold rounded-lg active:bg-brand-accentHover transition-colors">
+            Ler resenha
+        </button>
     </article>`;
 }
 
@@ -1096,60 +1113,71 @@ async function renderHome() {
     if (featured) {
         document.getElementById('featured-book-section').innerHTML = `
         <div class="bg-brand-white/40 backdrop-blur-md border border-brand-border rounded-2xl shadow-2xl overflow-hidden">
-            <!-- Mobile: stack vertical | Desktop: side by side -->
-            <div class="flex flex-col sm:flex-row gap-0">
+            <div class="flex flex-row sm:flex-row gap-0">
 
-                <!-- Capa -->
-                <div class="relative flex-shrink-0 flex justify-center items-start bg-brand-bgSec/40 p-5 sm:p-8 sm:w-56 md:w-64">
-                    <div class="relative cursor-pointer w-32 sm:w-full" onclick="viewBookDetail('${featured.id}')">
-                        <img src="${featured.cover_url || ''}" onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'" alt="${featured.title}" class="w-full aspect-book object-cover rounded-lg shadow-lg">
-                        <span class="absolute top-2 left-2 bg-brand-accent text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">Escolha do Editor</span>
+                <!-- Capa — largura fixa em mobile, maior em desktop -->
+                <div class="flex-shrink-0 bg-brand-bgSec/40 flex items-start justify-center p-3 sm:p-6 md:p-8 w-28 sm:w-48 md:w-60">
+                    <div class="relative cursor-pointer w-full" onclick="viewBookDetail('${featured.id}')">
+                        <img src="${featured.cover_url || ''}"
+                             onerror="this.src='https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=600&q=80'"
+                             alt="${featured.title}"
+                             class="w-full aspect-book object-cover rounded-lg shadow-lg"
+                             loading="lazy">
+                        <span class="absolute top-1.5 left-1.5 bg-brand-accent text-white text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded shadow">Escolha do Editor</span>
                     </div>
                 </div>
 
                 <!-- Conteúdo -->
-                <div class="flex-1 p-5 sm:p-7 space-y-3 sm:space-y-4">
-                    <!-- Meta -->
-                    <div class="flex flex-wrap items-center gap-2 text-[11px] text-brand-muted">
-                        <span class="font-bold text-brand-lilac uppercase tracking-wider">${featured.genre}</span>
-                        <span class="text-brand-border">•</span>
-                        <span class="inline-flex items-center gap-1 text-emerald-400">
-                            <i data-lucide="shield-check" class="w-3 h-3"></i> ${featured.spoiler_status || '🟢 Livre de Spoilers'}
-                        </span>
-                        <span class="text-brand-border">•</span>
-                        <span class="inline-flex items-center gap-1">
+                <div class="flex-1 min-w-0 p-3 sm:p-6 md:p-8 flex flex-col gap-2 sm:gap-3">
+                    <!-- Meta tags -->
+                    <div class="flex flex-wrap items-center gap-1.5 text-[10px] sm:text-[11px] text-brand-muted">
+                        <span class="font-bold text-brand-lilac uppercase">${featured.genre}</span>
+                        <span>·</span>
+                        <span class="text-emerald-400 hidden sm:inline">${featured.spoiler_status || '🟢 Livre de Spoilers'}</span>
+                        <span class="hidden sm:inline">·</span>
+                        <span class="flex items-center gap-0.5">
                             <i data-lucide="clock" class="w-3 h-3"></i> ${featured.read_time || '8 min'}
                         </span>
                     </div>
 
                     <!-- Título -->
-                    <h2 class="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-brand-text leading-snug cursor-pointer hover:text-brand-lilac transition-colors" onclick="viewBookDetail('${featured.id}')">
-                        ${featured.title} <span class="text-brand-muted font-normal">— ${featured.author}</span>
+                    <h2 class="font-serif text-base sm:text-xl md:text-3xl font-bold text-brand-text leading-snug cursor-pointer"
+                        onclick="viewBookDetail('${featured.id}')">
+                        ${featured.title}
+                        <span class="text-brand-muted font-normal text-sm sm:text-base hidden sm:inline"> — ${featured.author}</span>
                     </h2>
+                    <p class="text-[11px] sm:hidden text-brand-muted">${featured.author}</p>
 
-                    <!-- Excerpt 5 linhas -->
-                    <p class="text-brand-muted text-sm leading-relaxed" style="display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden">${featured.excerpt || ''}</p>
+                    <!-- Excerpt — 3 linhas mobile, 5 desktop -->
+                    <p class="text-brand-muted text-xs sm:text-sm leading-relaxed"
+                       style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${featured.excerpt || ''}</p>
 
-                    <!-- Preços -->
-                    <div class="grid grid-cols-2 gap-2 text-xs pt-1">
-                        <div class="bg-brand-bg/60 p-2.5 rounded-lg border border-brand-border flex flex-col gap-0.5">
-                            <span class="font-medium text-brand-text text-[11px]">Livro Físico</span>
+                    <!-- Preços — compactos em mobile -->
+                    <div class="grid grid-cols-2 gap-1.5 sm:gap-2 text-[10px] sm:text-xs">
+                        <div class="bg-brand-bg/60 p-2 sm:p-2.5 rounded-lg border border-brand-border flex flex-col gap-0.5">
+                            <span class="text-brand-muted">Físico</span>
                             <span class="font-bold text-emerald-400">${featured.price_physical || 'R$ 49,90'}</span>
-                            <button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')" class="text-[10px] text-brand-accent hover:underline text-left">Ver na Amazon →</button>
+                            <button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')"
+                                    class="text-brand-accent text-left active:underline">Ver →</button>
                         </div>
-                        <div class="bg-brand-bg/60 p-2.5 rounded-lg border border-brand-border flex flex-col gap-0.5">
-                            <span class="font-medium text-brand-text text-[11px]">eBook / Kindle</span>
+                        <div class="bg-brand-bg/60 p-2 sm:p-2.5 rounded-lg border border-brand-border flex flex-col gap-0.5">
+                            <span class="text-brand-muted">Kindle</span>
                             <span class="font-bold text-emerald-400">${featured.price_kindle || 'R$ 24,90'}</span>
-                            <button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')" class="text-[10px] text-brand-accent hover:underline text-left">Ver no Kindle →</button>
+                            <button onclick="window.open('${featured.affiliate_link || 'https://amazon.com.br'}','_blank')"
+                                    class="text-brand-accent text-left active:underline">Ver →</button>
                         </div>
                     </div>
 
-                    <!-- Ações -->
-                    <div class="flex flex-wrap items-center gap-3 pt-1">
-                        <button onclick="viewBookDetail('${featured.id}')" class="flex-1 sm:flex-none px-5 py-2.5 bg-brand-accent hover:bg-brand-accentHover text-white text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 shadow">
-                            <i data-lucide="book-open" class="w-4 h-4"></i> Ler Análise Completa
+                    <!-- CTA -->
+                    <div class="flex items-center gap-2 pt-0.5">
+                        <button onclick="viewBookDetail('${featured.id}')"
+                                class="flex-1 sm:flex-none px-3 sm:px-5 py-2.5 bg-brand-accent text-white text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 shadow active:bg-brand-accentHover transition-colors">
+                            <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                            <span class="hidden sm:inline">Ler Análise Completa</span>
+                            <span class="sm:hidden">Ler Resenha</span>
                         </button>
-                        <button onclick="toggleBookmark('${featured.id}')" class="p-2.5 rounded-lg border border-brand-border hover:border-brand-accent text-brand-muted hover:text-brand-accent transition-colors">
+                        <button onclick="toggleBookmark('${featured.id}')"
+                                class="p-2.5 rounded-lg border border-brand-border active:border-brand-accent text-brand-muted active:text-brand-accent transition-colors">
                             <i data-lucide="bookmark" data-bm-id="${featured.id}" class="w-4 h-4 ${savedBookmarks.includes(featured.id) ? 'text-brand-accent fill-current' : ''}"></i>
                         </button>
                     </div>
