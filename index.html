@@ -100,43 +100,58 @@
         }
         #mobile-menu.open { max-height: 600px; }
 
-        /* ── Bottom nav (mobile) ── */
-        #bottom-nav {
-            display: flex;
+        /* ── Hamburger mobile menu ── */
+        #mobile-drawer {
             position: fixed;
-            bottom: 0; left: 0; right: 0;
-            z-index: 45;
-            background: rgba(10,6,12,0.97);
-            backdrop-filter: blur(16px);
-            border-top: 1px solid rgba(180,145,205,0.15);
-            padding-bottom: env(safe-area-inset-bottom, 0);
+            inset: 0;
+            z-index: 50;
+            display: none;
         }
-        @media (min-width: 768px) { #bottom-nav { display: none; } }
-        #bottom-nav button {
-            flex: 1;
+        #mobile-drawer.open { display: flex; }
+        #mobile-drawer-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+        }
+        #mobile-drawer-panel {
+            position: relative;
+            z-index: 1;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background: rgba(12,8,16,0.98);
+            border-right: 1px solid rgba(180,145,205,0.15);
             display: flex;
             flex-direction: column;
+            padding: 0;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform .3s cubic-bezier(.4,0,.2,1);
+        }
+        #mobile-drawer.open #mobile-drawer-panel { transform: translateX(0); }
+        #mobile-drawer-panel nav a,
+        #mobile-drawer-panel nav button {
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 3px;
-            padding: 8px 4px;
-            font-size: 10px;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 15px;
             font-weight: 500;
             color: #c0b2ca;
             border: none;
             background: none;
+            text-align: left;
             cursor: pointer;
-            transition: color .2s;
+            border-bottom: 1px solid rgba(180,145,205,0.07);
+            transition: background .15s, color .15s;
             -webkit-tap-highlight-color: transparent;
+            min-height: 52px;
         }
-        #bottom-nav button.active, #bottom-nav button:active { color: #d16d82; }
-        #bottom-nav button i { width: 22px; height: 22px; display: block; stroke-width: 1.8; }
-        #bottom-nav button svg { width: 22px; height: 22px; }
-
-        /* Padding inferior para não tapar conteúdo com bottom nav */
-        @media (max-width: 767px) {
-            main { padding-bottom: 70px; }
-        }
+        #mobile-drawer-panel nav button:active,
+        #mobile-drawer-panel nav button.active { background: rgba(209,109,130,0.08); color: #d16d82; }
+        #mobile-drawer-panel nav button svg { width: 18px; height: 18px; flex-shrink: 0; opacity: .7; }
 
         /* ── Cards de livro — touch friendly ── */
         @media (max-width: 479px) {
@@ -224,7 +239,6 @@
         /* ── Tap targets mínimos de 44px ── */
         button, [role="button"] { min-height: 36px; }
         @media (max-width: 767px) { button, [role="button"] { min-height: 44px; } }
-        #bottom-nav button { min-height: 52px; }
 
         /* ── Texto legível em mobile ── */
         @media (max-width: 639px) {
@@ -285,54 +299,76 @@
                 <i data-lucide="lock" class="w-3.5 h-3.5"></i>
                 <span id="admin-nav-label">Admin</span>
             </button>
-            <!-- Hamburger — só aparece em tablet (md) pois mobile usa bottom nav -->
-            <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="hidden sm:flex md:hidden p-2 rounded-lg text-brand-text hover:bg-brand-bgSec transition-colors" aria-label="Menu">
-                <i data-lucide="menu" id="menu-icon-open" class="w-6 h-6"></i>
-                <i data-lucide="x"    id="menu-icon-close" class="w-6 h-6 hidden"></i>
+            <!-- Hamburger — aparece em mobile e tablet, some em desktop -->
+            <button onclick="openDrawer()" class="md:hidden p-2 rounded-lg text-brand-text hover:bg-brand-bgSec transition-colors" aria-label="Menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
             </button>
         </div>
     </div>
 
-    <!-- Menu tablet (sm → md) -->
-    <div id="mobile-menu" class="md:hidden border-b border-brand-border bg-brand-bg/98 backdrop-blur-lg px-4 pb-4 overflow-hidden" style="max-height:0;transition:max-height .35s ease">
-        <div class="pt-2 space-y-1">
-            <button onclick="switchTab('inicio')"    class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Início</button>
-            <button onclick="switchTab('resenhas')"  class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Resenhas</button>
-            <button onclick="switchTab('livros')"    class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Livros</button>
-            <button onclick="switchTab('autores')"   class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Autores</button>
-            <button onclick="switchTab('listas')"    class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Listas de Leitura</button>
-            <button onclick="switchTab('favoritos')" class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Minha Lista Salva</button>
-            <button onclick="switchTab('sobre')"     class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg hover:bg-brand-bgSec active:bg-brand-border">Sobre</button>
-            <button onclick="switchTab('admin')"     class="block w-full text-left py-3 px-3 text-sm font-medium rounded-lg bg-brand-bgSec text-brand-accent">
-                <i data-lucide="lock" class="w-4 h-4 inline mr-1"></i> Painel Admin
-            </button>
-        </div>
-    </div>
 </header>
 
-<!-- BOTTOM NAV (mobile only — < 768px) -->
-<nav id="bottom-nav" aria-label="Navegação principal">
-    <button onclick="setBottomNav('inicio')"    id="bn-inicio"    class="active">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <span>Início</span>
-    </button>
-    <button onclick="setBottomNav('resenhas')"  id="bn-resenhas">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        <span>Resenhas</span>
-    </button>
-    <button onclick="openSearchModal()"         id="bn-search">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <span>Buscar</span>
-    </button>
-    <button onclick="setBottomNav('favoritos')" id="bn-favoritos">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
-        <span>Lista (<span id="bn-bookmarks-count">0</span>)</span>
-    </button>
-    <button onclick="setBottomNav('admin')"     id="bn-admin">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span>Admin</span>
-    </button>
-</nav>
+<!-- MOBILE DRAWER (slide-in lateral) -->
+<div id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+    <div id="mobile-drawer-backdrop" onclick="closeDrawer()"></div>
+    <div id="mobile-drawer-panel">
+        <!-- Cabeçalho do drawer -->
+        <div class="flex items-center justify-between px-5 py-4 border-b border-brand-border/30 flex-shrink-0">
+            <div>
+                <span class="font-serif text-lg font-bold text-brand-text">Entre Páginas</span>
+                <span class="block text-[10px] text-brand-muted tracking-widest uppercase">Revista & Crítica Literária</span>
+            </div>
+            <button onclick="closeDrawer()" class="p-2 rounded-lg text-brand-muted hover:text-brand-text transition-colors" aria-label="Fechar menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+        <!-- Links -->
+        <nav class="flex-1 py-2">
+            <button onclick="switchTab('inicio')" id="dn-inicio" class="active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Início
+            </button>
+            <button onclick="switchTab('resenhas')" id="dn-resenhas">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                Resenhas
+            </button>
+            <button onclick="switchTab('livros')" id="dn-livros">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                Livros
+            </button>
+            <button onclick="switchTab('autores')" id="dn-autores">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Autores
+            </button>
+            <button onclick="switchTab('listas')" id="dn-listas">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                Listas de Leitura
+            </button>
+            <button onclick="switchTab('favoritos')" id="dn-favoritos">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+                Minha Lista (<span id="dn-bookmarks-count">0</span>)
+            </button>
+            <button onclick="switchTab('sobre')" id="dn-sobre">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                Sobre
+            </button>
+            <!-- Divisor -->
+            <div class="mx-5 my-2 border-t border-brand-border/30"></div>
+            <button onclick="switchTab('admin')" id="dn-admin" style="color:#d16d82">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Painel Admin
+            </button>
+            <button onclick="openSearchModal()" style="color:#bda6d6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                Buscar
+            </button>
+        </nav>
+        <!-- Rodapé drawer -->
+        <div class="px-5 py-4 border-t border-brand-border/30 text-[10px] text-brand-muted">
+            © 2026 Entre Páginas Periódico Cultural
+        </div>
+    </div>
+</div>
 
 <!-- SEARCH MODAL -->
 <div id="search-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-end sm:items-start justify-center sm:pt-16 sm:px-4">
@@ -564,7 +600,7 @@
 
     <!-- LOGIN -->
     <div id="admin-login-screen" class="max-w-md mx-auto">
-        <div class="bg-brand-white/80 backdrop-blur-md border border-brand-border rounded-2xl p-8 space-y-6 shadow-2xl">
+        <div class="bg-brand-white/80 backdrop-blur-md border border-brand-border rounded-2xl p-8 shadow-2xl space-y-6">
             <div class="text-center space-y-2">
                 <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-brand-bgSec border border-brand-border mb-2">
                     <i data-lucide="lock" class="w-7 h-7 text-brand-accent"></i>
@@ -572,20 +608,67 @@
                 <h2 class="font-serif text-2xl font-bold text-brand-text">Área do Administrador</h2>
                 <p class="text-xs text-brand-muted">Acesso restrito ao editor do Entre Páginas.</p>
             </div>
+
+            <!-- TABS: Login | Alterar Senha -->
+            <div class="flex border border-brand-border rounded-lg overflow-hidden text-xs font-semibold">
+                <button onclick="switchLoginTab('login')" id="ltab-login"
+                    class="flex-1 py-2.5 bg-brand-accent text-white transition-colors">
+                    Entrar
+                </button>
+                <button onclick="switchLoginTab('reset')" id="ltab-reset"
+                    class="flex-1 py-2.5 bg-brand-bgSec text-brand-muted hover:text-brand-text transition-colors">
+                    Alterar Senha
+                </button>
+            </div>
+
+            <!-- FORM LOGIN -->
             <form id="login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-brand-text mb-1.5">E-mail</label>
-                    <input type="email" id="login-email" required placeholder="admin@entrepaginas.com.br" class="cms-input">
+                    <input type="email" id="login-email" required placeholder="" autocomplete="email" class="cms-input">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-brand-text mb-1.5">Senha</label>
-                    <input type="password" id="login-password" required placeholder="••••••••" class="cms-input">
+                    <div class="relative">
+                        <input type="password" id="login-password" required placeholder="" autocomplete="current-password" class="cms-input pr-10">
+                        <button type="button" onclick="togglePasswordVis('login-password', this)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-text transition-colors">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" id="login-btn" class="w-full py-3 bg-brand-accent hover:bg-brand-accentHover text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                <button type="submit" id="login-btn"
+                    class="w-full py-3 bg-brand-accent hover:bg-brand-accentHover text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
                     <i data-lucide="log-in" class="w-4 h-4"></i> Entrar no Painel
                 </button>
             </form>
-            <p class="text-center text-xs text-brand-muted">Esqueceu sua senha? Entre em contato com o suporte técnico.</p>
+
+            <!-- FORM ALTERAR SENHA -->
+            <form id="reset-form" onsubmit="handleChangePassword(event)" class="space-y-4 hidden">
+                <p class="text-xs text-brand-muted leading-relaxed">Digite seu e-mail e defina uma nova senha. Você precisará estar conectado ao Supabase para confirmar.</p>
+                <div>
+                    <label class="block text-xs font-semibold text-brand-text mb-1.5">E-mail</label>
+                    <input type="email" id="reset-email" required placeholder="" autocomplete="email" class="cms-input">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-brand-text mb-1.5">Nova Senha</label>
+                    <div class="relative">
+                        <input type="password" id="reset-password" required placeholder="" minlength="8" autocomplete="new-password" class="cms-input pr-10">
+                        <button type="button" onclick="togglePasswordVis('reset-password', this)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-text transition-colors">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-brand-text mb-1.5">Confirmar Nova Senha</label>
+                    <input type="password" id="reset-password-confirm" required placeholder="" minlength="8" autocomplete="new-password" class="cms-input">
+                </div>
+                <button type="submit" id="reset-btn"
+                    class="w-full py-3 bg-brand-accent hover:bg-brand-accentHover text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <i data-lucide="key" class="w-4 h-4"></i> Alterar Senha
+                </button>
+            </form>
         </div>
     </div>
 
@@ -599,9 +682,14 @@
                 <h1 class="font-serif text-2xl sm:text-3xl font-bold text-brand-text">Gerenciador de Conteúdo</h1>
                 <p class="text-xs text-brand-muted mt-1">Logado como: <span id="admin-email-display" class="text-brand-lilac font-medium"></span></p>
             </div>
-            <button onclick="handleAdminLogout()" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium border border-brand-border rounded-lg text-brand-muted hover:text-brand-accent hover:border-brand-accent transition-colors">
-                <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sair
-            </button>
+            <div class="flex items-center gap-2">
+                <button onclick="openCmsChangePassword()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-brand-border rounded-lg text-brand-muted hover:text-brand-lilac hover:border-brand-lilac transition-colors">
+                    <i data-lucide="key" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Alterar Senha</span>
+                </button>
+                <button onclick="handleAdminLogout()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium border border-brand-border rounded-lg text-brand-muted hover:text-brand-accent hover:border-brand-accent transition-colors">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Sair</span>
+                </button>
+            </div>
         </div>
 
         <!-- TABS CMS -->
@@ -858,6 +946,41 @@
     </div>
 </div>
 
+<!-- MODAL ALTERAR SENHA (CMS) -->
+<div id="change-password-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-brand-bg/97 border border-brand-border rounded-2xl max-w-sm w-full p-8 shadow-2xl space-y-5">
+        <div class="text-center space-y-1">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-bgSec border border-brand-border mb-1">
+                <i data-lucide="key" class="w-5 h-5 text-brand-lilac"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-brand-text">Alterar Senha</h3>
+            <p class="text-xs text-brand-muted">Logado como: <span id="cp-email-display" class="text-brand-lilac"></span></p>
+        </div>
+        <form id="cp-form" onsubmit="handleCmsChangePassword(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-brand-text mb-1.5">Nova Senha</label>
+                <div class="relative">
+                    <input type="password" id="cp-new-password" required minlength="8" placeholder="" autocomplete="new-password" class="cms-input pr-10">
+                    <button type="button" onclick="togglePasswordVis('cp-new-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-text">
+                        <i data-lucide="eye" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <p class="text-[10px] text-brand-muted mt-1">Mínimo 8 caracteres.</p>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-brand-text mb-1.5">Confirmar Nova Senha</label>
+                <input type="password" id="cp-confirm-password" required minlength="8" placeholder="" autocomplete="new-password" class="cms-input">
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="closeCmsChangePassword()" class="flex-1 py-2.5 border border-brand-border rounded-lg text-xs font-medium text-brand-muted hover:text-brand-text transition-colors">Cancelar</button>
+                <button type="submit" id="cp-btn" class="flex-1 py-2.5 bg-brand-accent hover:bg-brand-accentHover text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors">
+                    <i data-lucide="save" class="w-3.5 h-3.5"></i> Salvar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- MODAL CONFIRMAR EXCLUSÃO -->
 <div id="delete-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-brand-bg/97 border border-brand-border rounded-2xl max-w-sm w-full p-8 shadow-2xl space-y-5 text-center">
@@ -938,11 +1061,11 @@ function switchTab(tabId) {
         target.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    closeMobileMenu();
-    // Atualizar bottom nav
-    document.querySelectorAll('#bottom-nav button').forEach(b => b.classList.remove('active'));
-    const bnBtn = document.getElementById('bn-' + tabId);
-    if (bnBtn) bnBtn.classList.add('active');
+    closeDrawer();
+    // Atualizar estado ativo no drawer
+    document.querySelectorAll('#mobile-drawer-panel nav button').forEach(b => b.classList.remove('active'));
+    const dnBtn = document.getElementById('dn-' + tabId);
+    if (dnBtn) dnBtn.classList.add('active');
     if (tabId === 'favoritos') renderBookmarksPage();
     if (tabId === 'resenhas')  renderResenhas();
     if (tabId === 'livros')    renderLivros();
@@ -952,38 +1075,30 @@ function switchTab(tabId) {
     if (window.lucide) lucide.createIcons();
 }
 
-function setBottomNav(tabId) {
-    switchTab(tabId);
-    // Forçar ícones SVG inline já estão no HTML — não precisa do lucide aqui
+function openDrawer() {
+    const d = document.getElementById('mobile-drawer');
+    if (!d) return;
+    d.classList.add('open');
+    document.body.style.overflow = 'hidden';
 }
-
-function toggleMobileMenu() {
-    const menu   = document.getElementById('mobile-menu');
-    const open   = document.getElementById('menu-icon-open');
-    const close  = document.getElementById('menu-icon-close');
-    const isOpen = menu.style.maxHeight && menu.style.maxHeight !== '0px';
-    menu.style.maxHeight = isOpen ? '0px' : '600px';
-    if (open)  open.classList.toggle('hidden', !isOpen);
-    if (close) close.classList.toggle('hidden', isOpen);
+function closeDrawer() {
+    const d = document.getElementById('mobile-drawer');
+    if (!d) return;
+    d.classList.remove('open');
+    document.body.style.overflow = '';
 }
-function closeMobileMenu() {
-    const menu  = document.getElementById('mobile-menu');
-    const open  = document.getElementById('menu-icon-open');
-    const close = document.getElementById('menu-icon-close');
-    if (menu)  menu.style.maxHeight = '0px';
-    if (open)  open.classList.remove('hidden');
-    if (close) close.classList.add('hidden');
-}
+// Fechar drawer com tecla Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
 // ═══════════════════════════════════════════════════════
 // BOOKMARKS
 // ═══════════════════════════════════════════════════════
 function updateBookmarkBadge() {
     const n = savedBookmarks.length;
-    const el  = document.getElementById('nav-bookmarks-count');
-    const el2 = document.getElementById('bn-bookmarks-count');
-    if (el)  el.textContent  = n;
-    if (el2) el2.textContent = n;
+    ['nav-bookmarks-count','dn-bookmarks-count'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = n;
+    });
 }
 
 function toggleBookmark(bookId) {
@@ -1984,6 +2099,126 @@ function handleNewsletterSubmit(e) {
     e.preventDefault();
     showToast('✉️ Inscrição realizada com sucesso!');
     e.target.reset();
+}
+
+// ═══════════════════════════════════════════════════════
+// ALTERAR SENHA — MODAL CMS
+// ═══════════════════════════════════════════════════════
+function openCmsChangePassword() {
+    const modal = document.getElementById('change-password-modal');
+    const disp  = document.getElementById('cp-email-display');
+    if (disp && currentAdminUser) disp.textContent = currentAdminUser.email;
+    document.getElementById('cp-form').reset();
+    modal.classList.remove('hidden');
+    if (window.lucide) lucide.createIcons();
+}
+function closeCmsChangePassword() {
+    document.getElementById('change-password-modal').classList.add('hidden');
+}
+async function handleCmsChangePassword(e) {
+    e.preventDefault();
+    const newPass = document.getElementById('cp-new-password').value;
+    const confirm = document.getElementById('cp-confirm-password').value;
+    const btn     = document.getElementById('cp-btn');
+
+    if (newPass !== confirm) { showToast('❌ As senhas não coincidem.', 'error'); return; }
+    if (newPass.length < 8)  { showToast('❌ Mínimo 8 caracteres.', 'error'); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px"></div> Salvando...';
+
+    const { error } = await sb.auth.updateUser({ password: newPass });
+
+    btn.disabled = false;
+    btn.innerHTML = '<i data-lucide="save" class="w-3.5 h-3.5"></i> Salvar';
+    if (window.lucide) lucide.createIcons();
+
+    if (error) {
+        showToast('❌ Erro: ' + error.message, 'error');
+    } else {
+        showToast('✅ Senha alterada com sucesso!');
+        closeCmsChangePassword();
+    }
+}
+
+// ═══════════════════════════════════════════════════════
+// LOGIN TABS & ALTERAR SENHA
+// ═══════════════════════════════════════════════════════
+function switchLoginTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('login-form').classList.toggle('hidden', !isLogin);
+    document.getElementById('reset-form').classList.toggle('hidden',  isLogin);
+    document.getElementById('ltab-login').className = `flex-1 py-2.5 transition-colors text-xs font-semibold ${isLogin ? 'bg-brand-accent text-white' : 'bg-brand-bgSec text-brand-muted hover:text-brand-text'}`;
+    document.getElementById('ltab-reset').className = `flex-1 py-2.5 transition-colors text-xs font-semibold ${!isLogin ? 'bg-brand-accent text-white' : 'bg-brand-bgSec text-brand-muted hover:text-brand-text'}`;
+}
+
+function togglePasswordVis(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const isText = input.type === 'text';
+    input.type = isText ? 'password' : 'text';
+    // Trocar ícone
+    btn.innerHTML = isText
+        ? '<i data-lucide="eye" class="w-4 h-4"></i>'
+        : '<i data-lucide="eye-off" class="w-4 h-4"></i>';
+    if (window.lucide) lucide.createIcons();
+}
+
+async function handleChangePassword(e) {
+    e.preventDefault();
+    const btn      = document.getElementById('reset-btn');
+    const email    = document.getElementById('reset-email').value.trim();
+    const newPass  = document.getElementById('reset-password').value;
+    const confirm  = document.getElementById('reset-password-confirm').value;
+
+    if (newPass !== confirm) {
+        showToast('❌ As senhas não coincidem.', 'error');
+        return;
+    }
+    if (newPass.length < 8) {
+        showToast('❌ A senha precisa ter ao menos 8 caracteres.', 'error');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px"></div> Aguarde...';
+
+    // Tentar login primeiro para verificar identidade
+    const { data: loginData, error: loginErr } = await sb.auth.signInWithPassword({ email, password: newPass });
+
+    if (!loginErr && loginData?.user) {
+        // Já está usando a nova senha — não precisa alterar
+        showToast('ℹ️ Esta já é a sua senha atual.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="key" class="w-4 h-4"></i> Alterar Senha';
+        if (window.lucide) lucide.createIcons();
+        return;
+    }
+
+    // Precisamos estar logados para atualizar a senha
+    // Verificar se já há sessão ativa
+    const { data: { session } } = await sb.auth.getSession();
+
+    if (session && session.user && session.user.email === email) {
+        // Já logado — atualizar senha diretamente
+        const { error } = await sb.auth.updateUser({ password: newPass });
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="key" class="w-4 h-4"></i> Alterar Senha';
+        if (error) {
+            showToast('❌ Erro: ' + error.message, 'error');
+        } else {
+            showToast('✅ Senha alterada com sucesso!');
+            document.getElementById('reset-form').reset();
+            switchLoginTab('login');
+        }
+    } else {
+        // Não logado — precisa confirmar a senha atual antes
+        showToast('⚠️ Faça login primeiro para alterar a senha.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="key" class="w-4 h-4"></i> Alterar Senha';
+        switchLoginTab('login');
+    }
+    if (window.lucide) lucide.createIcons();
 }
 
 // ═══════════════════════════════════════════════════════
