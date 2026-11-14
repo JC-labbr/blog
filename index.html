@@ -609,18 +609,6 @@
                 <p class="text-xs text-brand-muted">Acesso restrito ao editor do Entre Páginas.</p>
             </div>
 
-            <!-- TABS: Login | Alterar Senha -->
-            <div class="flex border border-brand-border rounded-lg overflow-hidden text-xs font-semibold">
-                <button onclick="switchLoginTab('login')" id="ltab-login"
-                    class="flex-1 py-2.5 bg-brand-accent text-white transition-colors">
-                    Entrar
-                </button>
-                <button onclick="switchLoginTab('reset')" id="ltab-reset"
-                    class="flex-1 py-2.5 bg-brand-bgSec text-brand-muted hover:text-brand-text transition-colors">
-                    Alterar Senha
-                </button>
-            </div>
-
             <!-- FORM LOGIN -->
             <form id="login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
@@ -640,33 +628,6 @@
                 <button type="submit" id="login-btn"
                     class="w-full py-3 bg-brand-accent hover:bg-brand-accentHover text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
                     <i data-lucide="log-in" class="w-4 h-4"></i> Entrar no Painel
-                </button>
-            </form>
-
-            <!-- FORM ALTERAR SENHA -->
-            <form id="reset-form" onsubmit="handleChangePassword(event)" class="space-y-4 hidden">
-                <p class="text-xs text-brand-muted leading-relaxed">Digite seu e-mail e defina uma nova senha. Você precisará estar conectado ao Supabase para confirmar.</p>
-                <div>
-                    <label class="block text-xs font-semibold text-brand-text mb-1.5">E-mail</label>
-                    <input type="email" id="reset-email" required placeholder="" autocomplete="email" class="cms-input">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-brand-text mb-1.5">Nova Senha</label>
-                    <div class="relative">
-                        <input type="password" id="reset-password" required placeholder="" minlength="8" autocomplete="new-password" class="cms-input pr-10">
-                        <button type="button" onclick="togglePasswordVis('reset-password', this)"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-text transition-colors">
-                            <i data-lucide="eye" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-brand-text mb-1.5">Confirmar Nova Senha</label>
-                    <input type="password" id="reset-password-confirm" required placeholder="" minlength="8" autocomplete="new-password" class="cms-input">
-                </div>
-                <button type="submit" id="reset-btn"
-                    class="w-full py-3 bg-brand-accent hover:bg-brand-accentHover text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
-                    <i data-lucide="key" class="w-4 h-4"></i> Alterar Senha
                 </button>
             </form>
         </div>
